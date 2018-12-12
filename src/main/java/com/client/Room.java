@@ -1,5 +1,5 @@
 package com.client;
 
-public class Player {
+public class Room  {
 
 }
