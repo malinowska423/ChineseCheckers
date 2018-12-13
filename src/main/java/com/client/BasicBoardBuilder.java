@@ -8,7 +8,8 @@ import javafx.scene.shape.Circle;
 
 public class BasicBoardBuilder extends BoardBuilder {
     Circle moveCircle = null;
-    
+
+
 
     @Override
     public GridPane buildBoard(int playerId, String s) {
