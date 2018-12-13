@@ -14,6 +14,6 @@
       <ChoiceBox layoutX="37.0" layoutY="350.0" prefHeight="25.0" prefWidth="227.0" />
       <Label layoutX="37.0" layoutY="325.0" prefHeight="25.0" prefWidth="181.0" text="Number of AI players" />
       <ChoiceBox layoutX="37.0" layoutY="237.0" prefHeight="25.0" prefWidth="227.0" />
-      <Button defaultButton="true" layoutX="90.0" layoutY="567.0" mnemonicParsing="false" prefHeight="57.0" prefWidth="121.0" text="Create" />
+      <Button defaultButton="true" layoutX="90.0" layoutY="567.0" mnemonicParsing="false" onAction="#createRoom" prefHeight="57.0" prefWidth="121.0" text="Create" />
    </children>
 </AnchorPane>

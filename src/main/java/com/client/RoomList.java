@@ -21,6 +21,10 @@ public class RoomList {
     @FXML
     private void refresh(){
 
+        int id = (int) (Math.random()*100);
+        String list = id + " 4 6";
+        addToRoomList(list);
+
     }
 
     @FXML
