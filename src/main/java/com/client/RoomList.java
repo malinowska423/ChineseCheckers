@@ -21,7 +21,6 @@ public class RoomList {
     @FXML
     private void refresh(){
 
-
     }
 
     @FXML
