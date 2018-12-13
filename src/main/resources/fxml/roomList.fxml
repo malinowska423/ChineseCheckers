@@ -11,6 +11,6 @@
       <Button layoutX="88.0" layoutY="356.0" mnemonicParsing="false" onAction="#refresh" prefHeight="100.0" prefWidth="200.0" text="Refresh" />
       <Button layoutX="88.0" layoutY="256.0" mnemonicParsing="false" onAction="#newRoom" prefHeight="100.0" prefWidth="200.0" text="New room" />
       <Button layoutX="88.0" layoutY="531.0" mnemonicParsing="false" onAction="#joinRoom" prefHeight="100.0" prefWidth="200.0" text="Join" />
-      <VBox layoutX="288.0" layoutY="256.0" prefHeight="376.0" prefWidth="850.0" />
+      <VBox fx:id="roomList" layoutX="288.0" layoutY="256.0" prefHeight="376.0" prefWidth="850.0" />
    </children>
 </AnchorPane>

@@ -54,4 +54,19 @@ public class GUI extends Application {
             System.out.println("FXML exception");
         }
     }
+
+    public void gameRoomScene() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/room.fxml"));
+            newWindow = new Stage();
+            newWindow.setScene(new Scene(root, 1280,720));
+            newWindow.setResizable(false);
+            newWindow.setTitle("Room #");
+            newWindow.setAlwaysOnTop(true);
+            newWindow.setOnCloseRequest(e -> Room.endGame());
+            newWindow.show();
+        } catch (IOException e) {
+            System.out.println("FXML exception");
+        }
+    }
 }

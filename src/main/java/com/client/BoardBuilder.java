@@ -1,3 +1,5 @@
+package com.client;
+
 import javafx.scene.layout.GridPane;
 
 public abstract class BoardBuilder {
