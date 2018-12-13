@@ -1,0 +1,44 @@
+#anchorPane {
+    -fx-background-image: url(../images/bg.jpeg);
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+#title {
+    -fx-font-size: 50 px;
+    -fx-font-family: "Berlin Sans FB";
+    -fx-text-fill: #fff;
+    -fx-text-alignment: center;
+}
+
+.button {
+    -fx-font-size: 20px;
+    -fx-font-family: "Malgun Gothic";
+    -fx-background-color: rgba(0, 134, 179, 0.8);
+    -fx-text-fill: #fff;
+}
+
+.button:hover {
+    -fx-background-color: rgba(0, 134, 179, 0.5);
+
+}
+
+#list {
+    -fx-opacity: 0.8;
+}
+
+.list-item {
+    -fx-pref-width: 850px;
+    -fx-pref-height: 30px;
+    -fx-font-size: 20px;
+    -fx-background-color: #fff;
+
+}
+
+.list-item:hover {
+    -fx-background-color: #ccd9ff;
+}
+
+.list-item:selected {
+    -fx-background-color: #668cff;
+}

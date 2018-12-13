@@ -39,6 +39,7 @@ public class RoomList {
         String [] data = list.split(" ");
         String roomInfo = "Room #" + data[0] + "\t\t" + data[1] + "/" + data[2] + " players";
         ToggleButton room = new ToggleButton(Integer.parseInt(data[0]), roomInfo);
+        room.getStyleClass().add("list-item");
         room.setToggleGroup(rooms);
         roomList.getChildren().add(room);
     }
