@@ -28,6 +28,7 @@ public class Room {
         String [] players = {"Player#336", "Player#88", "Player#112"};
         String [] colors = {"red", "green", "blue"};
         loadPlayers(players, colors);
+        loadBoard("none", 2, "");
     }
 
     public void loadBoard(String type, int playerId, String board) {
