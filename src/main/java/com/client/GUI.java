@@ -6,8 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 import java.io.IOException;
 
@@ -52,7 +54,8 @@ public class GUI extends Application {
             newWindow.setTitle("Create new room");
             newWindow.setAlwaysOnTop(true);
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/add.png")));
-            newWindow.showAndWait();
+            newWindow.initModality(Modality.APPLICATION_MODAL);
+            newWindow.show();
         } catch (IOException e) {
             System.out.println("FXML exception");
         }
