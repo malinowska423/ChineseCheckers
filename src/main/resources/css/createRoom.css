@@ -1,0 +1,66 @@
+#anchorPane {
+    -fx-background-image: url(../images/bg_create.png);
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+#title {
+    -fx-font-size: 30px;
+    -fx-font-family: "Berlin Sans FB";
+    -fx-text-alignment: center;
+    -fx-text-fill: #fff;
+}
+
+#modeList {
+    -fx-opacity: .8;
+}
+
+.mode_label {
+    -fx-font-size: 16px;
+    -fx-font-family: "Malgun Gothic";
+    -fx-text-fill: #fff;
+    -fx-text-alignment: right;
+}
+
+.mode_item {
+    -fx-pref-width: 100px;
+    -fx-min-width: 100px;
+    -fx-pref-height: 127px;
+    -fx-background-color: #fff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Malgun Gothic";
+    -fx-text-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, blue 50%);
+    -fx-wrap-text: true;
+    -fx-alignment: center center;
+    -fx-text-alignment: center center;
+}
+
+.player_item {
+    -fx-background-color: #fff;
+    -fx-font-size: 13px;
+}
+.mode_item:hover, .player_item:hover {
+    -fx-background-color: #e6ecff;
+}
+
+.mode_item:selected, .player_item:selected {
+    -fx-background-color: #ccd9ff;
+}
+
+
+.button {
+    -fx-font-size: 17px;
+    -fx-font-family: "Malgun Gothic";
+    -fx-background-color: rgba(0, 134, 179, 0.8);
+    -fx-text-fill: #fff;
+}
+
+.button:hover {
+    -fx-background-color: rgba(0, 134, 179, 0.5);
+
+}
+/*
+.choice-box {
+    -fx-background-color: #fff;
+}*/

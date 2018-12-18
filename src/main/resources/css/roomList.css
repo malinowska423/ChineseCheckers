@@ -16,6 +16,7 @@
     -fx-font-family: "Malgun Gothic";
     -fx-background-color: rgba(0, 134, 179, 0.8);
     -fx-text-fill: #fff;
+    -fx-font-weight: bold;
 }
 
 .button:hover {

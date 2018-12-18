@@ -45,7 +45,7 @@ public class GUI extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/createRoom.fxml"));
             newWindow = new Stage();
-            newWindow.setScene(new Scene(root, 300,700));
+            newWindow.setScene(new Scene(root, 400,500));
             newWindow.setResizable(false);
             newWindow.setTitle("Create new room");
             newWindow.setAlwaysOnTop(true);
