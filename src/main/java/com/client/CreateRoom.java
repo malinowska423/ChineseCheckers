@@ -1,22 +1,15 @@
 package com.client;
 
 
-import com.sun.javafx.scene.control.EmbeddedTextContextMenuContent;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class CreateRoom {
 
-    private ToggleGroup gameModeList;
-    private ToggleGroup numberOfPlayersList;
-    private ToggleGroup numberOfAIPlayersList;
+    private ToggleGroup gameModeList = new ToggleGroup();
+    private ToggleGroup numberOfPlayersList = new ToggleGroup();
+    private ToggleGroup numberOfAIPlayersList = new ToggleGroup();
 
     @FXML
     HBox gameMode;
@@ -25,27 +18,18 @@ public class CreateRoom {
     @FXML
     HBox numberOfAIPlayers;
 
-
-
     @FXML
-    private void createRoom(Event event){
-        GUI.getInstance().gameRoomScene();
-//        ((Button) event.getSource());
-//        ((Stage) ((Button) event.getSource())).getScene().getWindow().hide();
+    private void createRoom(){
+        //TODO: call method sending data to server and receive roomId before opening new window
+        GUI.getInstance().gameRoomScene("New game");
     }
 
     @FXML
     private void updateList() {
-        System.out.println("working");
-
-
-        String [] modes = new String[4];
+        //TODO: create method downloading game options data from server
+        String[] modes = {"Basic Pro", "Easy", "Hard", "Good"};
         String [] players = {"2", "3", "4", "6"};
-        String [] ai = {"2", "3", "4", "6"};
-        modes[0] = "Basic";
-        modes[1] = "Medium";
-        modes[2] = "Hard";
-        modes[3] = "Good";
+        String [] ai = {"1", "2", "3", "4", "5"};
         setListsData(modes, players, ai);
 
     }
@@ -57,7 +41,7 @@ public class CreateRoom {
     }
 
     private void setListData(String [] data, HBox node, ToggleGroup list, String style) {
-        list = new ToggleGroup();
+        list.getToggles().removeAll(list.getToggles());
         node.getChildren().removeAll(node.getChildren());
         ToggleButton mode;
         for (String datum : data) {
@@ -67,6 +51,10 @@ public class CreateRoom {
             mode.getStyleClass().add(style);
         }
 
+    }
+
+    private String getNewRoomData(){
+        return (((ToggleButton) gameModeList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfPlayersList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfAIPlayersList.getSelectedToggle()).getText() + ";");
     }
 
 }
