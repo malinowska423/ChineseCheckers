@@ -10,8 +10,23 @@ public class Room {
 
     }
 
-    public void loadBoard(int playerId, String board) {
-        BoardBuilder boardBuilder = new BasicBoardBuilder();
+    public void loadBoard(String type, int playerId, String board) {
+        BoardBuilder boardBuilder;
+        switch (type){
+            case "basic":
+            {
+                boardBuilder = new BasicBoardBuilder();
+            }break;
+            default:
+            {
+                boardBuilder = new BoardBuilder() {
+                    @Override
+                    public GridPane buildBoard(int playerId, String s) {
+                        return null;
+                    }
+                };
+            } break;
+        }
         boardGrid = boardBuilder.buildBoard(playerId, board);
     }
 }
