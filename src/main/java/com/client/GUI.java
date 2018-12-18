@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -25,6 +26,7 @@ public class GUI extends Application {
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(e -> Platform.exit());
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
         primaryStage.show();
 
 
@@ -49,7 +51,7 @@ public class GUI extends Application {
             newWindow.setResizable(false);
             newWindow.setTitle("Create new room");
             newWindow.setAlwaysOnTop(true);
-
+            newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/add.png")));
             newWindow.showAndWait();
         } catch (IOException e) {
             System.out.println("FXML exception");
@@ -68,6 +70,7 @@ public class GUI extends Application {
             newWindow.setTitle(label);
             newWindow.setAlwaysOnTop(false);
             newWindow.setOnCloseRequest(e -> Room.endGame());
+            newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
             newWindow.show();
         } catch (IOException e) {
             System.out.println("FXML exception");
