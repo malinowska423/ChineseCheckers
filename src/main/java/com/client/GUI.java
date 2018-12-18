@@ -56,7 +56,7 @@ public class GUI extends Application {
         }
     }
 
-    public void gameRoomScene() {
+    public void gameRoomScene(String label) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/room.fxml"));
             if (newWindow != null && newWindow.getTitle().equals("Create new room")) {
@@ -65,7 +65,7 @@ public class GUI extends Application {
             newWindow = new Stage();
             newWindow.setScene(new Scene(root, 1280,720));
             newWindow.setResizable(false);
-            newWindow.setTitle("Room #");
+            newWindow.setTitle(label);
             newWindow.setAlwaysOnTop(false);
             newWindow.setOnCloseRequest(e -> Room.endGame());
             newWindow.show();

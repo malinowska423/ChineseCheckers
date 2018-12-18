@@ -1,0 +1,59 @@
+#anchorPane {
+    -fx-background-image: url(../images/bg_room.jpg);
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+#grid {
+    -fx-background-color: rgba(255,255,255,.25);
+}
+
+#playersList {
+    -fx-background-color: rgba(255,255,255,.6);
+
+}
+
+#playersList > .label {
+    -fx-pref-height: 40px;
+    -fx-pref-width: 300px;
+    -fx-font-size: 17px;
+    -fx-font-family: "Malgun Gothic";
+    -fx-padding: 7px 11px;
+    -fx-background-color: rgba(230, 236, 255, .4);
+}
+#playersList > .bg_color {
+    -fx-background-color: rgba(204, 216, 255,.4);
+}
+
+.first {
+    -fx-font-weight: bold;
+}
+
+#roomTitle {
+    -fx-background-color: rgba(255,255,255,.6);
+    -fx-font-size: 38px;
+    -fx-text-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, dodgerblue 0%, blue 50%);
+    -fx-font-family: "Berlin Sans FB";
+}
+
+#infoArea {
+    -fx-background-color: rgba(0, 134, 179, 0.5);
+    -fx-font-size: 18px;
+    -fx-font-family: "Malgun Gothic";
+    -fx-alignment: center center;
+    -fx-text-alignment: center center;
+    -fx-text-fill: #fff;
+}
+
+.button {
+    -fx-font-size: 24px;
+    -fx-font-family: "Malgun Gothic";
+    -fx-background-color: rgba(0, 134, 179, 0.8);
+    -fx-text-fill: #fff;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: rgba(0, 134, 179, 0.5);
+
+}
