@@ -15,6 +15,8 @@ public class BasicBoardBuilder extends BoardBuilder {
     public GridPane buildBoard(int playerId, String s) {
         System.out.println(s);
         GridPane grid = new GridPane();
+        grid.setHgap(0);
+        grid.setVgap(7);
         grid.setAlignment(Pos.CENTER);
         int radius = 12;
         int row = 0;
@@ -23,24 +25,26 @@ public class BasicBoardBuilder extends BoardBuilder {
             char sign = s.charAt(i);
             if(sign == ' ' || sign == '-') {
                 Label hspacing = new Label();
-                hspacing.setStyle("-fx-min-height: " + 2*radius  + ";-fx-min-width: " + 2*radius + ";");
-                grid.add(hspacing,column,row);
+                hspacing.setMaxSize(5,5);
+                hspacing.setMinSize(5,5);
+
+//                hspacing.setStyle("-fx-min-height: " + radius + ";-fx-max-height: " + radius  + ";-fx-min-width: " + radius
+//                        +";-fx-max-width: " + radius + ";");
+//                grid.add(hspacing,column,row);
                 column++;
 //                System.out.println("SPACE");
             }
             else if(sign == '\n') {
 //                System.out.println("JUMP");
-                row++;
-                Label vspacing = new Label();
-                vspacing.setStyle("-fx-min-height: 5;-fx-max-height: 10;-fx-min-width: 20;");
-                grid.add(vspacing,0,row);
+//                row++;
+//                Label vspacing = new Label();
+//                vspacing.setStyle("-fx-min-height: 5;-fx-max-height: 10;-fx-min-width: 20;");
+//                grid.add(vspacing,0,row);
                 row++;
                 column = 0;
             }
             else {
                 BoardCircle circle = new BoardCircle();
-
-
                 switch (sign) {
                     case 'o': {
 //                        com.client.BoardCircle circle = new com.client.BoardCircle();
@@ -151,7 +155,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                     circle.setOnMouseClicked(mouseEvent -> {
                         int y = grid.getRowIndex(circle);
                         int x = grid.getColumnIndex(circle);
-                        System.out.println("Y: " + y / 2 + " X: " + x / 2);
+                        System.out.println("Y: " + y  + " X: " + x );
                         if (moveCircle != null) {
                             int moveY = grid.getRowIndex(moveCircle);
                             int moveX = grid.getColumnIndex(moveCircle);
