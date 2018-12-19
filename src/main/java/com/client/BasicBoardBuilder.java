@@ -22,10 +22,9 @@ public class BasicBoardBuilder extends BoardBuilder {
     }
 
     @Override
-    public GridPane buildBoard(int playerId, String s) {
+    public void buildBoard(int playerId, String s, GridPane grid) {
         currentPlayer = playerId;
         System.out.println(s);
-        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setStyle("-fx-background-color: rgba(255,255,255,.25)");
         int radius = 12;
@@ -196,7 +195,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                                 moveCircle = null;
                                 disableAllPawns();
                                 currentPlayer = (currentPlayer%3) + 1;
-                                title.setText(currentPlayer + " turn!");
+                                title.setText("Player " + currentPlayer + " turn!");
                                 System.out.println("Player " + currentPlayer + " Turn");
                                 activatePawns(currentPlayer);
 
@@ -228,7 +227,6 @@ public class BasicBoardBuilder extends BoardBuilder {
         }
         disableAllPawns();
         activatePawns(playerId);
-        return grid;
     }
 
     public void activatePawns(int playerId) {

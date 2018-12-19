@@ -63,13 +63,13 @@ public class Room {
             {
                 boardBuilder = new BoardBuilder() {
                     @Override
-                    public GridPane buildBoard(int playerId, String s) {
-                        return null;
+                    public void buildBoard(int playerId, String s, GridPane grid) {
                     }
                 };
             } break;
         }
-        boardGrid.add(boardBuilder.buildBoard(playerId, board),0 ,0);
+
+        boardBuilder.buildBoard(playerId, board, boardGrid);
     }
 
     private void loadTitle(String name) {

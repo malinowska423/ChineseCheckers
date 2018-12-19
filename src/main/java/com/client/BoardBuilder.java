@@ -4,5 +4,5 @@ import javafx.scene.layout.GridPane;
 
 public abstract class BoardBuilder {
 
-    public abstract GridPane buildBoard (int playerId, String s);
+    public abstract void buildBoard (int playerId, String s, GridPane grid);
 }
