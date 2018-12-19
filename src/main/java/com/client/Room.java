@@ -28,6 +28,27 @@ public class Room {
         String [] players = {"Player#336", "Player#88", "Player#112"};
         String [] colors = {"red", "green", "blue"};
         loadPlayers(players, colors);
+
+        String in = "  - - - - - - - - - - - - - - - \n" +
+                "- - - - - - - 1 - - - - - - - \n" +
+                " - - - - - - 1 1 - - - - - - - \n" +
+                "- - - - - - 1 1 1 - - - - - - \n" +
+                " - - - - - 1 1 1 1 - - - - - - \n" +
+                "- o o o o o o o o o 2 2 2 2 - \n" +
+                " - o o o o o o o o o 2 2 2 - - \n" +
+                "- - o o o o o o o o o 2 2 - - \n" +
+                " - - o o o o o o o o o 2 - - - \n" +
+                "- - - o o o o o o o o o - - - \n" +
+                " - - o o o o o o o o o 3 - - - \n" +
+                "- - o o o o o o o o o 3 3 - - \n" +
+                " - o o o o o o o o o 3 3 3 - - \n" +
+                "- o o o o o o o o o 3 3 3 3 - \n" +
+                " - - - - - o o o o - - - - - - \n" +
+                "- - - - - - o o o - - - - - - \n" +
+                " - - - - - - o o - - - - - - - \n" +
+                "- - - - - - - o - - - - - - - \n" +
+                " - - - - - - - - - - - - - - - ";
+        loadBoard("basic", 1, in);
     }
 
     public void loadBoard(String type, int playerId, String board) {
@@ -36,18 +57,19 @@ public class Room {
             case "basic":
             {
                 boardBuilder = new BasicBoardBuilder();
+                ((BasicBoardBuilder) boardBuilder).setTitle(infoDisplay);
             }break;
             default:
             {
                 boardBuilder = new BoardBuilder() {
                     @Override
-                    public GridPane buildBoard(int playerId, String s) {
-                        return null;
+                    public void buildBoard(int playerId, String s, GridPane grid) {
                     }
                 };
             } break;
         }
-        boardGrid = boardBuilder.buildBoard(playerId, board);
+
+        boardBuilder.buildBoard(playerId, board, boardGrid);
     }
 
     private void loadTitle(String name) {
