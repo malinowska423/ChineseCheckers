@@ -1,6 +1,7 @@
 package com.client;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -16,6 +17,8 @@ public class Room {
     Label infoDisplay;
     @FXML
     VBox playersList;
+    @FXML
+    Button playButton;
 
 
     public static void endGame(){
@@ -24,6 +27,7 @@ public class Room {
 
     @FXML
     private void play(){
+        playButton.setDisable(true);
         loadTitle("Room#342");
         loadInfo("Player#112 ended his move. Your turn!");
         String [] players = {"Player#336", "Player#88", "Player#112"};

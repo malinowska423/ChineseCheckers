@@ -26,7 +26,8 @@ public class BasicBoardBuilder extends BoardBuilder {
         double radius = ((pane.getPrefHeight()-2*inset)*Math.sqrt(3)/52)-0.01;
         System.out.println(0.09*radius);
 
-        double xgap = pane.getPrefWidth()/27;
+//        double xgap = pane.getPrefWidth()/27;
+        double xgap = radius;
         double ygap = radius*Math.sqrt(3);
 
         double xinit = (pane.getPrefWidth()/2) - (14*xgap);
@@ -57,9 +58,9 @@ public class BasicBoardBuilder extends BoardBuilder {
                         xpos-xgap, ypos+ytemp,
                 };
                 hexagon.getPoints().addAll(points);
-                hexagon.setEffect(new DropShadow());
+//                hexagon.setEffect(new DropShadow());
 
-                hexagon.setStyle("-fx-fill: rgba(131,255,242,0.3);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius));
+                hexagon.setStyle("-fx-fill: rgba(255,255,255,0.3);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius));
                 pane.getChildren().add(hexagon);
 
                 BoardCircle circle = new BoardCircle();

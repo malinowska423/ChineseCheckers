@@ -11,7 +11,7 @@
    <children>
       <Pane id="pane" fx:id="pane" layoutX="46.0" layoutY="110.0" prefHeight="570.0" prefWidth="877.0" />
       <VBox id="playersList" fx:id="playersList" layoutX="953.0" layoutY="300.0" prefHeight="380.0" prefWidth="300.0" />
-      <Button defaultButton="true" layoutX="953.0" layoutY="204.0" mnemonicParsing="false" onAction="#play" prefHeight="70.0" prefWidth="304.0" text="Play" />
+      <Button fx:id="playButton" defaultButton="true" layoutX="953.0" layoutY="204.0" mnemonicParsing="false" onAction="#play" prefHeight="70.0" prefWidth="304.0" text="Play" />
       <Label id="roomTitle" fx:id="title" alignment="CENTER" layoutX="958.0" layoutY="20.0" prefHeight="163.0" prefWidth="304.0" />
       <Label id="infoArea" fx:id="infoDisplay" layoutX="46.0" layoutY="19.0" mouseTransparent="true" prefHeight="60.0" prefWidth="877.0" wrapText="true">
          <cursor>
