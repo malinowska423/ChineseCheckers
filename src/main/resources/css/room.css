@@ -7,10 +7,13 @@
 #pane {
     -fx-background-color: rgba(255,255,255,.25);
 }
+#scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
 
 #playersList {
     -fx-background-color: rgba(255,255,255,.6);
-
 }
 
 #playersList > .label {

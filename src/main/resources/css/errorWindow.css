@@ -1,20 +1,41 @@
 
 .errorAlert {
-    -fx-background-color: #ffcccc;
+    -fx-background-color: #000;
     -fx-font-family: "Consolas";
     -fx-font-size: 17;
-    -fx-pref-height: 100;
+    -fx-pref-height: 200;
+    -fx-pref-width: 500;
     -fx-spacing: 10;
+    -fx-text-fill: #fff;
 }
 
+.errorAlert .header-panel {
+    -fx-background-color: #000;
+}
 
+.errorAlert .header-panel .label {
+    -fx-text-fill: #00e600;
+    -fx-text-alignment: center center;
+    -fx-padding: 10px 20px;
+}
+
+.errorAlert .content {
+    -fx-text-fill: #fff;
+    -fx-padding: 10px 5px 10px 40px;
+}
 .errorAlert .button {
-    -fx-background-color: #ff4d4d;
+    -fx-background-color: #000;
     -fx-text-fill: white;
-    -fx-font-family: "Lucida Console";
-    -fx-border-width: 0;
+    -fx-font-family: "Consolas";
     -fx-background-radius: 0;
-    -fx-pref-width: 70;
-    -fx-pref-height: 20;
-    -fx-font-size: 13;
+    -fx-pref-width: 100;
+    -fx-pref-height: 30;
+    -fx-font-size: 17;
+    -fx-border-color: #fff;
+    -fx-border-width: 1px;
+}
+
+.errorAlert .button:hover {
+    -fx-cursor: pointer;
+    -fx-background-color: #222;
 }

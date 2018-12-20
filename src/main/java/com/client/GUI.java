@@ -45,7 +45,7 @@ public class GUI extends Application {
         return instance;
     }
 
-    public void launchCreateRoomScene() {
+    public void launchCreateRoomScene() throws ChineseCheckersWindowException{
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/createRoom.fxml"));
             newWindow = new Stage();
@@ -55,8 +55,8 @@ public class GUI extends Application {
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/add.png")));
             newWindow.initModality(Modality.APPLICATION_MODAL);
             newWindow.show();
-        } catch (IOException e) {
-            System.out.println("FXML exception");
+        } catch (Exception e) {
+            throw new ChineseCheckersWindowException("FXML error: " + e.getMessage());
         }
     }
 

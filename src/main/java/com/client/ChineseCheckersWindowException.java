@@ -16,6 +16,7 @@ public class ChineseCheckersWindowException extends ChineseCheckersException {
         errorWindow.setTitle("Error");
         errorWindow.setHeaderText("ChineseCheckersWindowException");
         errorWindow.setContentText(super.getMessage());
+        errorWindow.setGraphic(null);
         DialogPane dialogPane = errorWindow.getDialogPane();
         dialogPane.getStylesheets().add(
                 getClass().getResource("/css/errorWindow.css").toExternalForm());

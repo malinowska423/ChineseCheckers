@@ -15,7 +15,11 @@ public class RoomList {
 
     @FXML
     private void newRoom(){
-        GUI.getInstance().launchCreateRoomScene();
+        try {
+            GUI.getInstance().launchCreateRoomScene();
+        } catch (ChineseCheckersWindowException e) {
+            e.showWindow();
+        }
     }
 
     @FXML
