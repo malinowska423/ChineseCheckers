@@ -3,17 +3,22 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane id="anchorPane" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/room.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.Room">
    <children>
-      <Pane id="pane" fx:id="pane" layoutX="46.0" layoutY="110.0" prefHeight="570.0" prefWidth="877.0" />
-      <VBox id="playersList" fx:id="playersList" layoutX="953.0" layoutY="300.0" prefHeight="380.0" prefWidth="300.0" />
-      <Button fx:id="playButton" defaultButton="true" layoutX="953.0" layoutY="204.0" mnemonicParsing="false" onAction="#play" prefHeight="70.0" prefWidth="304.0" text="Play" />
-      <Label id="roomTitle" fx:id="title" alignment="CENTER" layoutX="958.0" layoutY="20.0" prefHeight="163.0" prefWidth="304.0" />
-      <Label id="infoArea" fx:id="infoDisplay" layoutX="46.0" layoutY="19.0" mouseTransparent="true" prefHeight="60.0" prefWidth="877.0" wrapText="true">
+      <Pane id="pane" fx:id="pane" layoutX="45.0" layoutY="20.0" prefHeight="680.0" prefWidth="880.0" />
+      <ScrollPane id="scroll" hbarPolicy="NEVER" layoutX="960.0" layoutY="300.0">
+         <content>
+            <VBox id="playersList" fx:id="playersList" prefHeight="400.0" prefWidth="300.0" />
+         </content>
+      </ScrollPane>
+      <Button fx:id="playButton" defaultButton="true" layoutX="960.0" layoutY="200.0" mnemonicParsing="false" onAction="#play" prefHeight="70.0" prefWidth="300.0" text="Play" />
+      <Label id="roomTitle" fx:id="title" alignment="CENTER" layoutX="960.0" layoutY="20.0" prefHeight="70.0" prefWidth="300.0" />
+      <Label id="infoArea" fx:id="infoDisplay" layoutX="960.0" layoutY="100.0" mouseTransparent="true" prefHeight="70.0" prefWidth="300.0" wrapText="true">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor></Label>

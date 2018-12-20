@@ -67,6 +67,7 @@ public class Room {
                 boardBuilder = new BoardBuilder() {
                     @Override
                     public void buildBoard(int playerId, String s, Pane pane) {
+                        pane.getChildren().removeAll(pane.getChildren());
                     }
                 };
             } break;
