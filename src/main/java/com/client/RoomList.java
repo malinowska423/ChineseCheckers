@@ -1,7 +1,6 @@
 package com.client;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -16,7 +15,7 @@ public class RoomList {
 
     @FXML
     private void newRoom(){
-        GUI.getInstance().createRoomScene();
+        GUI.getInstance().launchCreateRoomScene();
     }
 
     @FXML
@@ -33,7 +32,11 @@ public class RoomList {
     @FXML
     private void joinRoom(){
         if (rooms.getSelectedToggle() != null) {
-            GUI.getInstance().gameRoomScene(getToggleTitle(rooms.getSelectedToggle()));
+            try {
+                GUI.getInstance().launchGameRoomScene(getToggleTitle(rooms.getSelectedToggle()));
+            } catch (ChineseCheckersWindowException e) {
+                e.showWindow();
+            }
         }
 
     }

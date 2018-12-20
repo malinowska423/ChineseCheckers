@@ -21,7 +21,11 @@ public class CreateRoom {
     @FXML
     private void createRoom(){
         //TODO: call method sending data to server and receive roomId before opening new window
-        GUI.getInstance().gameRoomScene("New game");
+        try {
+            GUI.getInstance().launchGameRoomScene("New game");
+        } catch (ChineseCheckersWindowException e) {
+            e.showWindow();
+        }
     }
 
     @FXML

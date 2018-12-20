@@ -45,14 +45,13 @@ public class GUI extends Application {
         return instance;
     }
 
-    public void createRoomScene() {
+    public void launchCreateRoomScene() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/createRoom.fxml"));
             newWindow = new Stage();
             newWindow.setScene(new Scene(root, 400,500));
             newWindow.setResizable(false);
             newWindow.setTitle("Create new room");
-            newWindow.setAlwaysOnTop(true);
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/add.png")));
             newWindow.initModality(Modality.APPLICATION_MODAL);
             newWindow.show();
@@ -61,26 +60,22 @@ public class GUI extends Application {
         }
     }
 
-    public void gameRoomScene(String label) {
+    public void launchGameRoomScene(String label) throws ChineseCheckersWindowException {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/room.fxml"));
             if (newWindow != null && newWindow.getTitle().equals("Create new room")) {
                 newWindow.close();
             }
             newWindow = new Stage();
-            newWindow.setScene(new Scene(root, 1280,720));
+            newWindow.setScene(new Scene(root, 1280, 720));
             newWindow.setResizable(false);
             newWindow.setTitle(label);
-            newWindow.setAlwaysOnTop(false);
             newWindow.setOnCloseRequest(e -> Room.endGame());
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
             newWindow.show();
-        } catch (IOException e) {
-            System.out.println("FXML exception");
+        } catch (Exception e) {
+            throw new ChineseCheckersWindowException("FXML error: " + e.getMessage());
         }
     }
 
-    public void closeCurrentWindow(Stage thisWindow){
-        thisWindow.close();
-    }
 }

@@ -1,0 +1,20 @@
+
+.errorAlert {
+    -fx-background-color: #ffcccc;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 17;
+    -fx-pref-height: 100;
+    -fx-spacing: 10;
+}
+
+
+.errorAlert .button {
+    -fx-background-color: #ff4d4d;
+    -fx-text-fill: white;
+    -fx-font-family: "Lucida Console";
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-pref-width: 70;
+    -fx-pref-height: 20;
+    -fx-font-size: 13;
+}
