@@ -1,185 +1,235 @@
 package com.client;
 
-import javafx.geometry.Pos;
+import javafx.animation.FadeTransition;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
 
 public class BasicBoardBuilder extends BoardBuilder {
     Circle moveCircle = null;
-
+    ArrayList<BoardCircle> pawnsList = new ArrayList<>();
 
 
     @Override
-    public GridPane buildBoard(int playerId, String s) {
+    public void buildBoard(int playerId, String s, Pane pane) {
+
         System.out.println(s);
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        int radius = 12;
-        int row = 0;
-        int column = 0;
+        double inset = 10;
+
+        pane.getChildren().add(new Circle(0,0,1));
+
+        double radius = ((pane.getPrefHeight()-2*inset)*Math.sqrt(3)/52)-0.01;
+        System.out.println(0.09*radius);
+
+        double xgap = pane.getPrefWidth()/27;
+        double ygap = radius*Math.sqrt(3);
+
+        double xinit = (pane.getPrefWidth()/2) - (14*xgap);
+
+        double xpos = xinit;
+        double ypos=(2*radius/Math.sqrt(3))+ inset;
+
         for(int i=0;i<s.length();i++){
             char sign = s.charAt(i);
             if(sign == ' ' || sign == '-') {
-                Label hspacing = new Label();
-                hspacing.setStyle("-fx-min-height: " + 2*radius  + ";-fx-min-width: " + 2*radius + ";");
-                grid.add(hspacing,column,row);
-                column++;
-//                System.out.println("SPACE");
+                xpos=xpos+xgap;
             }
             else if(sign == '\n') {
-//                System.out.println("JUMP");
-                row++;
-                Label vspacing = new Label();
-                vspacing.setStyle("-fx-min-height: 5;-fx-max-height: 10;-fx-min-width: 20;");
-                grid.add(vspacing,0,row);
-                row++;
-                column = 0;
+                xpos=xinit;
+                ypos=ypos+ygap;
+
             }
             else {
-                BoardCircle circle = new BoardCircle();
 
+                Hexagon hexagon = new Hexagon(xpos, ypos);
+                double ytemp = radius/Math.sqrt(3);
+                Double[] points = new Double[]{
+                        xpos, ypos+2*ytemp,
+                        xpos+xgap, ypos+ytemp,
+                        xpos+xgap, ypos-ytemp,
+                        xpos, ypos-2*ytemp,
+                        xpos-xgap, ypos-ytemp,
+                        xpos-xgap, ypos+ytemp,
+                };
+                hexagon.getPoints().addAll(points);
+                hexagon.setEffect(new DropShadow());
+
+                hexagon.setStyle("-fx-fill: rgba(131,255,242,0.3);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius));
+                pane.getChildren().add(hexagon);
+
+                BoardCircle circle = new BoardCircle();
+                DropShadow drop = new DropShadow();
+                InnerShadow inner = new InnerShadow();
+
+                inner.setChoke(0.2);
+                drop.setInput(inner);
+                circle.setEffect(inner);
+
+                circle.setRadius(0.75*radius);
+                circle.setCenterX(xpos);
+                circle.setCenterY(ypos);
+
+
+
+                if(sign != 'o') {
+                    pane.getChildren().add(circle);
+                }
+
+                xpos=xpos+xgap;
 
                 switch (sign) {
-                    case 'o': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-                        circle.setField(true);
-                        circle.setRadius(radius);
-                        circle.setStyle("-fx-fill: black;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND o");
-                    }
-                    break;
+//                    case 'o': {
+//                        circle.setField(true);
+//                        drop.setInput(null);
+//                        circle.setStyle("-fx-fill: transparent;");
+//
+//                    }
+//                    break;
                     case '1': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-//                        circle.setPlayerId(1);
                         if(playerId == 1) {
                             circle.setPlayable(true);
+                            pawnsList.add(circle);
                         }
-                        circle.setRadius(radius);
                         circle.setStyle("-fx-fill: red;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND 1");
+
                     }
                     break;
                     case '2': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-//                        circle.setPlayerId(2);
                         if(playerId == 2) {
                             circle.setPlayable(true);
+                            pawnsList.add(circle);
                         }
-                        circle.setRadius(radius);
                         circle.setStyle("-fx-fill: green;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND 2");
+
                     }
                     break;
                     case '3': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-//                        circle.setPlayerId(3);
                         if(playerId == 3) {
                             circle.setPlayable(true);
+                            pawnsList.add(circle);
                         }
-                        circle.setRadius(radius);
-                        circle.setStyle("-fx-fill: yellow;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND 3");
+                        circle.setStyle("-fx-fill: blue;");
+
                     }
                     break;
                     case '4': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-//                        circle.setPlayerId(4);
                         if(playerId == 4) {
                             circle.setPlayable(true);
+                            pawnsList.add(circle);
                         }
-                        circle.setRadius(radius);
                         circle.setStyle("-fx-fill: purple;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND 4");
+
                     }
                     break;
                     case '5': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-//                        circle.setPlayerId(5);
                         if(playerId == 5) {
                             circle.setPlayable(true);
+                            pawnsList.add(circle);
                         }
-                        circle.setRadius(radius);
                         circle.setStyle("-fx-fill: brown;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND 5");
+
                     }
                     break;
                     case '6': {
-//                        com.client.BoardCircle circle = new com.client.BoardCircle();
-//                        circle.setPlayerId(6);
                         if(playerId == 6) {
                             circle.setPlayable(true);
+                            pawnsList.add(circle);
                         }
-                        circle.setRadius(radius);
-                        circle.setStyle("-fx-fill: blue;");
-                        grid.add(circle, column, row);
-                        column++;
-//                        System.out.println("FOUND 6");
+                        circle.setStyle("-fx-fill: yellow;");
                     }
                     break;
                 }
 
                 if(circle.isPlayable()) {
+
+
+
                     circle.setOnMouseClicked(mouseEvent -> {
-                        int y = grid.getRowIndex(circle);
-                        int x = grid.getColumnIndex(circle);
-                        System.out.println("Y: " + y / 2 + " X: " + x / 2);
+                        double y = circle.getCenterY();
+                        double x = circle.getCenterX();
+                        System.out.println("Y: " + Math.floor((y+10) / ygap) + " X: " + Math.floor((x+10)/(2*xgap)));
                         if(moveCircle != null) {
-                            moveCircle.setFill(null);
-                            String style = moveCircle.getStyle();
-                            moveCircle.setStyle("");
-                            moveCircle.setStyle(style);
+                            moveCircle.setStyle("-fx-fill: green");
                         }
                         moveCircle = circle;
-                        moveCircle.setFill(Color.PLUM);
-                    });
-                }
-                else if(circle.isField()) {
-                    circle.setOnMouseClicked(mouseEvent -> {
-                        int y = grid.getRowIndex(circle);
-                        int x = grid.getColumnIndex(circle);
-                        System.out.println("Y: " + y / 2 + " X: " + x / 2);
-                        if (moveCircle != null) {
-                            int moveY = grid.getRowIndex(moveCircle);
-                            int moveX = grid.getColumnIndex(moveCircle);
-                            if( Math.abs(x - moveX) <= 2 && Math.abs(y - moveY) <=2) {
-                                moveCircle.setStyle(moveCircle.getStyle());
-                                grid.getChildren().removeAll(circle, moveCircle);
-                                grid.add(moveCircle, x, y);
-                                grid.add(circle, moveX, moveY);
-                                moveCircle = null;
-                            }
-                            else {
-                                System.out.println("ZA DALEKO");
-                            }
-                        }
+                        moveCircle.setStyle("-fx-fill: coral");
                     });
                 }
                 else {
                     circle.setOnMouseClicked(mouseEvent -> {
-                        int y = grid.getRowIndex(circle);
-                        int x = grid.getColumnIndex(circle);
-                        System.out.println("Y: " + y / 2 + " X: " + x / 2);
+                        double y = circle.getCenterY();
+                        double x = circle.getCenterX();
+                        System.out.println(xgap);
+                        System.out.println("y: " + y + " x: " + x);
+                        System.out.println("Y: " + Math.floor((y+10) / ygap) + " X: " + Math.floor((x+10)/(2*xgap)));
                     });
                 }
+
+                hexagon.setOnMouseClicked(mouseEvent -> {
+                    double y = hexagon.getCenterY();
+                    double x = hexagon.getCenterX();
+                    System.out.println(x);
+                    System.out.println(2*xgap);
+                    System.out.println("Y: " + Math.floor((y+10) / ygap) + " X: " + Math.floor((x+10)/(2*xgap)));
+                    if (moveCircle != null) {
+                        double moveY = moveCircle.getCenterY();
+                        double moveX = moveCircle.getCenterX();
+                        if( Math.abs(x - moveX) <= (2*xgap+10) && Math.abs(y - moveY) <= (ygap+10)) {
+//                            moveCircle.setFill(null);
+                            Label text = new Label("playing");
+//                            try {
+                                FadeTransition ft = new FadeTransition(Duration.millis(150), moveCircle);
+                                ft.setFromValue(1.0);
+                                ft.setToValue(0.1);
+//                                ft.setCycleCount(Timeline.INDEFINITE);
+//                                ft.setAutoReverse(false);
+                                ft.play();
+                                ft.setOnFinished(actionEvent -> {
+
+                                    moveCircle.setStyle("-fx-fill: green");
+                                    moveCircle.setCenterY(y);
+                                    moveCircle.setCenterX(x);
+                                    moveCircle.toFront();
+
+                                    FadeTransition ft2 = new FadeTransition(Duration.millis(150), moveCircle);
+                                    ft2.setFromValue(0.1);
+                                    ft2.setToValue(1.0);
+                                    ft2.play();
+
+                                    moveCircle = null;
+
+                                });
+
+
+//                                disablePawns();
+                        }
+                        else {
+                            System.out.println("ZA DALEKO");
+                        }
+                    }
+                });
+
+
 
 
             }
         }
-        return grid;
     }
 
+    public void activatePawns() {
+        for (BoardCircle circle : pawnsList) {
+            circle.setDisable(false);
+        }
+    }
+
+    public void disablePawns(){
+        for (BoardCircle circle : pawnsList) {
+            circle.setDisable(true);
+        }
+    }
 }

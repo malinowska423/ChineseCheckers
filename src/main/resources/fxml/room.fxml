@@ -3,23 +3,13 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane id="anchorPane" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/room.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.Room">
    <children>
-      <GridPane id="grid" fx:id="boardGrid" layoutX="46.0" layoutY="110.0" prefHeight="570.0" prefWidth="877.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
+      <Pane id="pane" fx:id="pane" layoutX="46.0" layoutY="110.0" prefHeight="570.0" prefWidth="877.0" />
       <VBox id="playersList" fx:id="playersList" layoutX="953.0" layoutY="300.0" prefHeight="380.0" prefWidth="300.0" />
       <Button defaultButton="true" layoutX="953.0" layoutY="204.0" mnemonicParsing="false" onAction="#play" prefHeight="70.0" prefWidth="304.0" text="Play" />
       <Label id="roomTitle" fx:id="title" alignment="CENTER" layoutX="958.0" layoutY="20.0" prefHeight="163.0" prefWidth="304.0" />

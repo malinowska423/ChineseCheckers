@@ -4,11 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Room {
     @FXML
-    GridPane boardGrid;
+    Pane pane;
     @FXML
     Label title;
     @FXML
@@ -28,7 +29,26 @@ public class Room {
         String [] players = {"Player#336", "Player#88", "Player#112"};
         String [] colors = {"red", "green", "blue"};
         loadPlayers(players, colors);
-        loadBoard("none", 2, "");
+
+        String in =
+                "- - - - - - - 1 - - - - - - - \n" +
+                " - - - - - - 1 1 - - - - - - - \n" +
+                "- - - - - - 1 1 1 - - - - - - \n" +
+                " - - - - - 1 1 1 1 - - - - - - \n" +
+                "- o o o o o o o o o 2 2 2 2 - \n" +
+                " - o o o o o o o o o 2 2 2 - - \n" +
+                "- - o o o o o o o o o 2 2 - - \n" +
+                " - - o o o o o o o o o 2 - - - \n" +
+                "- - - o o o o o o o o o - - - \n" +
+                " - - o o o o o o o o o 3 - - - \n" +
+                "- - o o o o o o o o o 3 3 - - \n" +
+                " - o o o o o o o o o 3 3 3 - - \n" +
+                "- o o o o o o o o o 3 3 3 3 - \n" +
+                " - - - - - o o o o - - - - - - \n" +
+                "- - - - - - o o o - - - - - - \n" +
+                " - - - - - - o o - - - - - - - \n" +
+                "- - - - - - - o - - - - - - - \n";
+        loadBoard("basic", 2, in);
     }
 
     public void loadBoard(String type, int playerId, String board) {
@@ -42,13 +62,13 @@ public class Room {
             {
                 boardBuilder = new BoardBuilder() {
                     @Override
-                    public GridPane buildBoard(int playerId, String s) {
-                        return null;
+                    public void buildBoard(int playerId, String s, Pane pane) {
                     }
                 };
             } break;
         }
-        boardGrid = boardBuilder.buildBoard(playerId, board);
+
+        boardBuilder.buildBoard(playerId, board, pane);
     }
 
     private void loadTitle(String name) {
