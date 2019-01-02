@@ -3,15 +3,17 @@ package com.client;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Window;
-
-import java.io.IOException;
 
 public class GUI extends Application {
     private Stage newWindow;
@@ -30,9 +32,42 @@ public class GUI extends Application {
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(e -> Platform.exit());
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
+        launchGetNickScene();
         primaryStage.show();
 
 
+    }
+
+    public void launchGetNickScene() {
+        GridPane layout = new GridPane();
+        Stage welcomeWindow = new Stage();
+        welcomeWindow.setTitle("Welcome!");
+        Label welcome = new Label("Welcome to Chinese Checkers Pro");
+        Label nickLabel = new Label("Set your nick:");
+        TextField nickField = new TextField("Player");
+        layout.add(welcome,0,0,2,1);
+        layout.add(nickLabel, 0,1);
+        layout.add(nickField, 1,1);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.setHgap(10);
+        layout.setVgap(20);
+        layout.setAlignment(Pos.CENTER);
+        nickField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                Client.logIn(nickField.getText());
+                welcomeWindow.close();
+            }   else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                welcomeWindow.close();
+                Platform.exit();
+
+            }
+        });
+        Scene dialogScene = new Scene(layout, 400, 250);
+        welcomeWindow.setScene(dialogScene);
+        welcomeWindow.initModality(Modality.APPLICATION_MODAL);
+        welcomeWindow.initStyle(StageStyle.UNDECORATED);
+        welcomeWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
+        welcomeWindow.showAndWait();
     }
 
     public static GUI getInstance() {
