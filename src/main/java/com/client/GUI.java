@@ -21,6 +21,7 @@ public class GUI extends Application {
         launch(args);
     }
 
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/roomList.fxml"));
@@ -45,9 +46,12 @@ public class GUI extends Application {
         return instance;
     }
 
-    public void launchCreateRoomScene() throws ChineseCheckersWindowException{
+    public void launchCreateRoomScene(String gameOptions) throws ChineseCheckersWindowException{
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/createRoom.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/createRoom.fxml"));
+            Parent root = loader.load();
+            CreateRoom controller = loader.getController();
+            controller.initialize(gameOptions);
             newWindow = new Stage();
             newWindow.setScene(new Scene(root, 400,500));
             newWindow.setResizable(false);
@@ -55,21 +59,27 @@ public class GUI extends Application {
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/add.png")));
             newWindow.initModality(Modality.APPLICATION_MODAL);
             newWindow.show();
+        } catch (ChineseCheckersWindowException e) {
+            throw e;
         } catch (Exception e) {
             throw new ChineseCheckersWindowException("FXML error: " + e.getMessage());
         }
     }
 
-    public void launchGameRoomScene(String label) throws ChineseCheckersWindowException {
+    public void launchGameRoomScene(String roomData) throws ChineseCheckersWindowException {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/room.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/room.fxml"));
+            Parent root = loader.load();
+            Room controller = loader.getController();
+            controller.initialize(roomData);
             if (newWindow != null && newWindow.getTitle().equals("Create new room")) {
                 newWindow.close();
             }
+            String title = roomData.split(";")[0];
             newWindow = new Stage();
             newWindow.setScene(new Scene(root, 1280, 720));
             newWindow.setResizable(false);
-            newWindow.setTitle(label);
+            newWindow.setTitle(title);
             newWindow.setOnCloseRequest(e -> Room.endGame());
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
             newWindow.show();

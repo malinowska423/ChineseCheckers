@@ -18,24 +18,62 @@ public class CreateRoom {
     @FXML
     HBox numberOfAIPlayers;
 
+
+
+    public void initialize(String options) throws ChineseCheckersWindowException{
+        try {
+            updateList(options);
+        } catch (ChineseCheckersException e) {
+            throw new ChineseCheckersWindowException(e.getMessage());
+        }
+    }
     @FXML
     private void createRoom(){
         //TODO: call method sending data to server and receive roomId before opening new window
         try {
-            GUI.getInstance().launchGameRoomScene("New game");
+            String in =
+                    "- - - - - - - 1 - - - - - - - \n" +
+                            " - - - - - - 1 1 - - - - - - - \n" +
+                            "- - - - - - 1 1 1 - - - - - - \n" +
+                            " - - - - - 1 1 1 1 - - - - - - \n" +
+                            "- o o o o o o o o o 2 2 2 2 - \n" +
+                            " - o o o o o o o o o 2 2 2 - - \n" +
+                            "- - o o o o o o o o o 2 2 - - \n" +
+                            " - - o o o o o o o o o 2 - - - \n" +
+                            "- - - o o o o o o o o o - - - \n" +
+                            " - - o o o o o o o o o 3 - - - \n" +
+                            "- - o o o o o o o o o 3 3 - - \n" +
+                            " - o o o o o o o o o 3 3 3 - - \n" +
+                            "- o o o o o o o o o 3 3 3 3 - \n" +
+                            " - - - - - o o o o - - - - - - \n" +
+                            "- - - - - - o o o - - - - - - \n" +
+                            " - - - - - - o o - - - - - - - \n" +
+                            "- - - - - - - o - - - - - - - \n";
+            GUI.getInstance().launchGameRoomScene("Room#221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in);
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         }
     }
-
-    @FXML
-    private void updateList() {
-        //TODO: create method downloading game options data from server
-        String[] modes = {"Basic Pro", "Easy", "Hard", "Good"};
-        String [] players = {"2", "3", "4", "6"};
-        String [] ai = {"1", "2", "3", "4", "5"};
-        setListsData(modes, players, ai);
-
+    //gameOptions format: "numberOfModes;numberOfPlayers;numberOfAI;[modes];[players];[ai]"
+    public void updateList(String gameOptions) throws ChineseCheckersException {
+        if (gameOptions != null && !gameOptions.isEmpty()) {
+            String [] options = gameOptions.split(";");
+            int [] values = new int[3];
+            for (int i=0; i < 3; i++ ) {
+                values[i] = Integer.parseInt(options[i]);
+            }
+            String [][] info = new String[3][];
+            int index = 3;
+            for (int k = 0; k < 3; k++) {
+                info[k] = new String [values[k]];
+                for (int i = 0; i < values[k]; index++, i++) {
+                    info[k][i] = options[index];
+                }
+            }
+            setListsData(info[0], info[1], info[2]);
+        } else {
+            throw new ChineseCheckersException("Empty list of options");
+        }
     }
 
     private void setListsData(String [] modes, String [] players, String [] ai){
@@ -58,7 +96,6 @@ public class CreateRoom {
     }
 
     private String getNewRoomData(){
-        return (((ToggleButton) gameModeList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfPlayersList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfAIPlayersList.getSelectedToggle()).getText() + ";");
+        return (((ToggleButton) gameModeList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfPlayersList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfAIPlayersList.getSelectedToggle()).getText());
     }
-
 }

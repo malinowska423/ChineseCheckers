@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="anchorPane" onContextMenuRequested="#updateList" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/createRoom.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.CreateRoom">
+<AnchorPane id="anchorPane" prefHeight="500.0" prefWidth="400.0" stylesheets="@../css/createRoom.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.client.CreateRoom">
    <children>
       <Label id="title" layoutX="105.0" layoutY="14.0" prefHeight="57.0" prefWidth="227.0" text="Create new room" />
       <Label alignment="CENTER_RIGHT" layoutX="177.0" layoutY="85.0" prefHeight="38.0" prefWidth="181.0" styleClass="mode_label" text="Game mode" />

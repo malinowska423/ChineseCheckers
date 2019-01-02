@@ -20,6 +20,14 @@ public class Room {
     @FXML
     Button playButton;
 
+    public void initialize(String data) throws ChineseCheckersWindowException{
+        try {
+            loadRoom(data);
+        } catch (ChineseCheckersException e) {
+            throw new ChineseCheckersWindowException(e.getMessage());
+        }
+    }
+
 
     public static void endGame(){
 
@@ -28,37 +36,12 @@ public class Room {
     @FXML
     private void play(){
         playButton.setDisable(true);
-        loadTitle("Room#342");
-        loadInfo("Player#112 ended his move. Your turn!");
-        String [] players = {"Player#336", "Player#88", "Player#112"};
-        String [] colors = {"red", "green", "blue"};
-        loadPlayers(players, colors);
-
-        String in =
-                "- - - - - - - 1 - - - - - - - \n" +
-                " - - - - - - 1 1 - - - - - - - \n" +
-                "- - - - - - 1 1 1 - - - - - - \n" +
-                " - - - - - 1 1 1 1 - - - - - - \n" +
-                "- o o o o o o o o o 2 2 2 2 - \n" +
-                " - o o o o o o o o o 2 2 2 - - \n" +
-                "- - o o o o o o o o o 2 2 - - \n" +
-                " - - o o o o o o o o o 2 - - - \n" +
-                "- - - o o o o o o o o o - - - \n" +
-                " - - o o o o o o o o o 3 - - - \n" +
-                "- - o o o o o o o o o 3 3 - - \n" +
-                " - o o o o o o o o o 3 3 3 - - \n" +
-                "- o o o o o o o o o 3 3 3 3 - \n" +
-                " - - - - - o o o o - - - - - - \n" +
-                "- - - - - - o o o - - - - - - \n" +
-                " - - - - - - o o - - - - - - - \n" +
-                "- - - - - - - o - - - - - - - \n";
-        loadBoard("basic", 2, in);
     }
 
     public void loadBoard(String type, int playerId, String board) {
         BoardBuilder boardBuilder;
         switch (type){
-            case "basic":
+            case "Basic":
             {
                 boardBuilder = new BasicBoardBuilder();
             }break;
@@ -98,5 +81,30 @@ public class Room {
             playersList.getChildren().get(i).setStyle("-fx-text-fill: " + colors[i] + ";");
         }
         playersList.getChildren().get(0).getStyleClass().add("first");
+    }
+
+    private void loadRoom(String roomData) throws ChineseCheckersException {
+        if (roomData != null && !roomData.isEmpty()){
+            //roomData pattern: "title;message;numberOfPlayers;[players];[colors];gameMode;playerId;board"
+            String [] data = roomData.split(";");
+            loadTitle(data[0]);
+            loadInfo(data[1]);
+            int numberOfPlayers = Integer.parseInt(data[2]);
+            String [] players = new String [numberOfPlayers];
+            String [] colors = new String[numberOfPlayers];
+            int playerIndex = 3;
+            int colorIndex = 3 + numberOfPlayers;
+            for (int i = 0; i < numberOfPlayers; i++, playerIndex++, colorIndex++) {
+                players[i] = data[playerIndex];
+                colors[i] = data[colorIndex];
+            }
+            loadPlayers(players, colors);
+            String gameMode = data[3 + 2*numberOfPlayers];
+            int playerId = Integer.parseInt(data[4 + 2*numberOfPlayers]);
+            String board = data[5 + 2*numberOfPlayers];
+            loadBoard(gameMode,playerId,board);
+        } else {
+            throw new ChineseCheckersException("Empty room data");
+        }
     }
 }
