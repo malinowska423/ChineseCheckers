@@ -15,18 +15,16 @@ public class ClientThread implements Runnable{
 
     public ClientThread() {
         try {
-            clientSocket = new Socket("localhost", 1024);
+            clientSocket = new Socket("localhost", 7554);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
+
     @Override
     public void run() {
-        System.out.println("Connected");
-        int port = Integer.parseInt(ClientThread.sendMessage("port-request"));
-        System.out.println(port);
     }
 
     public static String sendMessage(String message) {
