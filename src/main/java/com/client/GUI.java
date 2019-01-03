@@ -68,7 +68,11 @@ public class GUI extends Application {
 
             }
         });
-        Scene dialogScene = new Scene(layout, 400, 250);
+        Scene dialogScene = new Scene(layout, 400, 150);
+        layout.setStyle("-fx-background-color: #2783e2; -fx-font-size: 15px;");
+        welcome.setStyle("-fx-text-fill: #fff; -fx-text-alignment: center; -fx-font-family: 'Berlin Sans FB'; -fx-font-size: 22px");
+        nickLabel.setStyle("-fx-text-fill: #fff;");
+        nickField.setStyle("-fx-background-color: #2783a2; -fx-text-fill: #fff;");
         welcomeWindow.setScene(dialogScene);
         welcomeWindow.initModality(Modality.APPLICATION_MODAL);
         welcomeWindow.initStyle(StageStyle.UNDECORATED);
