@@ -40,23 +40,12 @@ public class Room {
     }
 
     public void loadBoard(String type, int playerId, String board) {
-        BoardBuilder boardBuilder;
-        switch (type){
-            case "Basic":
-            {
-                boardBuilder = new BasicBoardBuilder();
-            }break;
-            default:
-            {
-                boardBuilder = new BoardBuilder() {
-                    @Override
-                    public void buildBoard(int playerId, String s, Pane pane) {
-                        pane.getChildren().removeAll(pane.getChildren());
-                    }
-                };
-            } break;
+        BoardBuilder boardBuilder = null;
+        try {
+            boardBuilder = BoardBuilder.runBuilder(type);
+        } catch (ChineseCheckersWindowException e) {
+            e.showWindow();
         }
-
         boardBuilder.buildBoard(playerId, board, pane);
     }
 
