@@ -30,12 +30,13 @@ public class Room {
 
 
     public static void endGame(){
-
+        //TODO: implement method that lets get out of room only if game is over for the player
     }
 
     @FXML
     private void play(){
         playButton.setDisable(true);
+        //TODO: send info to server about staring game
     }
 
     public void loadBoard(String type, int playerId, String board) {
@@ -85,9 +86,9 @@ public class Room {
 
     private void loadRoom(String roomData) throws ChineseCheckersException {
         if (roomData != null && !roomData.isEmpty()){
-            //roomData pattern: "title;message;numberOfPlayers;[players];[colors];gameMode;playerId;board"
+            //roomData pattern: "roomId;message;numberOfPlayers;[players];[colors];gameMode;playerId;board"
             String [] data = roomData.split(";");
-            loadTitle(data[0]);
+            loadTitle("Room #" + data[0]);
             loadInfo(data[1]);
             int numberOfPlayers = Integer.parseInt(data[2]);
             String [] players = new String [numberOfPlayers];

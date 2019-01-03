@@ -16,6 +16,7 @@ public class RoomList {
     @FXML
     private void newRoom(){
         try {
+            //TODO: receive gameOptions from server and launch GUI with them
             GUI.getInstance().launchCreateRoomScene("1;4;3;Basic;2;3;4;6;1;2;3");
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
@@ -23,21 +24,19 @@ public class RoomList {
     }
 
     @FXML
-    private void refresh(){
-
-        String [] currentRooms = new String[10];
-        for (int i = 0; i < 10; i++) {
-            int id = (int) (Math.random() * 100);
-            currentRooms[i] = id + " 3 5";
-        }
-        loadRoomList(currentRooms);
+    public void refresh(){
+        loadRoomList(getRoomList());
     }
 
     @FXML
     private void joinRoom(){
         if (rooms.getSelectedToggle() != null) {
             try {
-                GUI.getInstance().launchGameRoomScene(getToggleTitle(rooms.getSelectedToggle()));
+                //TODO: send server id of selected room
+                //getSelectedRoomId();
+                //TODO: receive data from server about chosen room, save it to variable and launch game room
+                String roomData = "";
+                GUI.getInstance().launchGameRoomScene(roomData);
             } catch (ChineseCheckersWindowException e) {
                 e.showWindow();
             }
@@ -54,8 +53,10 @@ public class RoomList {
         roomList.getChildren().add(room);
     }
 
-    private String getToggleTitle(Toggle toggle) {
-        return toggle.toString().substring(rooms.getSelectedToggle().toString().indexOf('\'')+1, rooms.getSelectedToggle().toString().indexOf('\t'));
+    private String getSelectedRoomId() {
+        return rooms.getSelectedToggle().toString()
+                .substring(rooms.getSelectedToggle().toString().indexOf('\'')+1, rooms.getSelectedToggle().toString().indexOf('\t'))
+                .split("#")[1];
     }
     
     private void loadRoomList(String [] availableRooms) {
@@ -64,6 +65,17 @@ public class RoomList {
                 availableRooms) {
             addToRoomList(datum);
         }
+    }
+
+    private String [] getRoomList() {
+        //TODO: receive room list from server and save it to variable currentRooms
+        //currentRooms pattern: "# # #;# # #;# # #:..."
+        String currentRooms = "";
+        for (int i = 0; i < 10; i++) {
+            int id = (int) (Math.random() * 100);
+            currentRooms += id + " 3 5;";
+        }
+        return currentRooms.split(";");
     }
 
 }

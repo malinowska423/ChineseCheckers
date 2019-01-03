@@ -29,8 +29,9 @@ public class CreateRoom {
     }
     @FXML
     private void createRoom(){
-        //TODO: call method sending data to server and receive roomId before opening new window
+        //TODO: call method sending data to server and receive roomData before opening new window
         try {
+            //getNewRoomData();
             String in =
                     "- - - - - - - 1 - - - - - - - \n" +
                             " - - - - - - 1 1 - - - - - - - \n" +
@@ -49,7 +50,8 @@ public class CreateRoom {
                             "- - - - - - o o o - - - - - - \n" +
                             " - - - - - - o o - - - - - - - \n" +
                             "- - - - - - - o - - - - - - - \n";
-            GUI.getInstance().launchGameRoomScene("Room#221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in);
+            String roomData = "221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in;
+            GUI.getInstance().launchGameRoomScene(roomData);
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         }
@@ -95,6 +97,7 @@ public class CreateRoom {
 
     }
 
+    // return pattern: "mode;players;ai"
     private String getNewRoomData(){
         return (((ToggleButton) gameModeList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfPlayersList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfAIPlayersList.getSelectedToggle()).getText());
     }

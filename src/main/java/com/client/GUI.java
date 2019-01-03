@@ -26,11 +26,17 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/roomList.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/roomList.fxml"));
+        Parent root = loader.load();
+        RoomList controller = loader.getController();
+        controller.refresh();
         primaryStage.setTitle("Chinese Checkers Pro");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.setResizable(false);
-        primaryStage.setOnCloseRequest(e -> Platform.exit());
+        primaryStage.setOnCloseRequest(e -> {
+            Client.logOut();
+            Platform.exit();
+        });
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
         launchGetNickScene();
         primaryStage.show();
@@ -110,11 +116,11 @@ public class GUI extends Application {
             if (newWindow != null && newWindow.getTitle().equals("Create new room")) {
                 newWindow.close();
             }
-            String title = roomData.split(";")[0];
+            String roomId = roomData.split(";")[0];
             newWindow = new Stage();
             newWindow.setScene(new Scene(root, 1280, 720));
             newWindow.setResizable(false);
-            newWindow.setTitle(title);
+            newWindow.setTitle("Chinese Checkers Pro - Room #" + roomId);
             newWindow.setOnCloseRequest(e -> Room.endGame());
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
             newWindow.show();
