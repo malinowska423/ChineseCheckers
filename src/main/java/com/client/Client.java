@@ -4,12 +4,17 @@ public class Client {
     public static String nick;
     public static int playerId;
     public static void main(String[] args) {
+        ClientThread client = new ClientThread();
+        Thread thread = new Thread(client);
+        thread.start();
+
         GUI.main(null);
     }
 
     public static void logIn(String nick) {
         //TODO: send nick to server, create player and receive playerId
         Client.nick = nick;
+
 //        Client.playerId = random();
     }
 
