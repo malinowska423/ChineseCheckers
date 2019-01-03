@@ -26,6 +26,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Platform.runLater(new ClientThread());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/roomList.fxml"));
         Parent root = loader.load();
         RoomList controller = loader.getController();
@@ -40,8 +41,6 @@ public class GUI extends Application {
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
         launchGetNickScene();
         primaryStage.show();
-
-
     }
 
     public void launchGetNickScene() {
@@ -63,6 +62,7 @@ public class GUI extends Application {
                 Client.logIn(nickField.getText());
                 welcomeWindow.close();
             }   else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                Client.logOut();
                 welcomeWindow.close();
                 Platform.exit();
 

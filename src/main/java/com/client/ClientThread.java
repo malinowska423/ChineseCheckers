@@ -5,47 +5,48 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 
 public class ClientThread implements Runnable{
 
+    private static PrintWriter out;
+    private static BufferedReader in;
+    private static Socket clientSocket;
+
+    public ClientThread() {
+        try {
+            clientSocket = new Socket("localhost", 1024);
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     @Override
     public void run() {
+        System.out.println("Connected");
+        int port = Integer.parseInt(ClientThread.sendMessage("port-request"));
+        System.out.println(port);
+    }
 
+    public static String sendMessage(String message) {
+        //TODO: make this method throw ChineseCheckersException
+        out.println(message);
+        String answer;
         try {
-            Socket clientSocket = new Socket("localhost", 1024);
-
-            System.out.println("Connected");
-
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-            out.println("port-request");
-
-            String message = "";
-            int port = 0;
-            while ((message = in.readLine()) != null) {
-                System.out.println(message);
-                if(message.charAt(0) == 'p') {
-                    message = message.substring(1);
-                    port = Integer.parseInt(message);
-                    out.println("pend");
-                }
-                if(message.equals("disconnected")) {
-                    break;
-                }
-            }
-
-            System.out.println(port);
-
-            clientSocket.close();
-
-//            clientSocket = new Socket("localhost", port);
-
-
-
-        } catch (IOException ex) {
-            System.out.println("Exception");
+            answer = in.readLine();
+            return Objects.requireNonNullElse(answer, "");
+        } catch (IOException e) {
+            return "";
         }
+    }
 
+    public static void closeSocket() {
+        ClientThread.sendMessage("pend");
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

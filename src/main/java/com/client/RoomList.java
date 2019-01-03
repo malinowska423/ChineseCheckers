@@ -17,7 +17,7 @@ public class RoomList {
     private void newRoom(){
         try {
             //TODO: receive gameOptions from server and launch GUI with them
-            GUI.getInstance().launchCreateRoomScene("1;4;3;Basic;2;3;4;6;1;2;3");
+            GUI.getInstance().launchCreateRoomScene(ClientThread.sendMessage("new-room"));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         }
