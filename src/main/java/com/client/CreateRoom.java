@@ -29,31 +29,31 @@ public class CreateRoom {
     }
     @FXML
     private void createRoom(){
-        //TODO: call method sending data to server and receive roomData before opening new window
         try {
-            //getNewRoomData();
-            String in =
-                    "- - - - - - - 1 - - - - - - - \n" +
-                            " - - - - - - 1 1 - - - - - - - \n" +
-                            "- - - - - - 1 1 1 - - - - - - \n" +
-                            " - - - - - 1 1 1 1 - - - - - - \n" +
-                            "- o o o o o o o o o 2 2 2 2 - \n" +
-                            " - o o o o o o o o o 2 2 2 - - \n" +
-                            "- - o o o o o o o o o 2 2 - - \n" +
-                            " - - o o o o o o o o o 2 - - - \n" +
-                            "- - - o o o o o o o o o - - - \n" +
-                            " - - o o o o o o o o o 3 - - - \n" +
-                            "- - o o o o o o o o o 3 3 - - \n" +
-                            " - o o o o o o o o o 3 3 3 - - \n" +
-                            "- o o o o o o o o o 3 3 3 3 - \n" +
-                            " - - - - - o o o o - - - - - - \n" +
-                            "- - - - - - o o o - - - - - - \n" +
-                            " - - - - - - o o - - - - - - - \n" +
-                            "- - - - - - - o - - - - - - - \n";
-            String roomData = "221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in;
-            GUI.getInstance().launchGameRoomScene(roomData);
+//            String in =
+//                    "- - - - - - - 1 - - - - - - - \n" +
+//                            " - - - - - - 1 1 - - - - - - - \n" +
+//                            "- - - - - - 1 1 1 - - - - - - \n" +
+//                            " - - - - - 1 1 1 1 - - - - - - \n" +
+//                            "- o o o o o o o o o 2 2 2 2 - \n" +
+//                            " - o o o o o o o o o 2 2 2 - - \n" +
+//                            "- - o o o o o o o o o 2 2 - - \n" +
+//                            " - - o o o o o o o o o 2 - - - \n" +
+//                            "- - - o o o o o o o o o - - - \n" +
+//                            " - - o o o o o o o o o 3 - - - \n" +
+//                            "- - o o o o o o o o o 3 3 - - \n" +
+//                            " - o o o o o o o o o 3 3 3 - - \n" +
+//                            "- o o o o o o o o o 3 3 3 3 - \n" +
+//                            " - - - - - o o o o - - - - - - \n" +
+//                            "- - - - - - o o o - - - - - - \n" +
+//                            " - - - - - - o o - - - - - - - \n" +
+//                            "- - - - - - - o - - - - - - - \n";
+//            String roomData = "221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in;
+            GUI.getInstance().launchGameRoomScene(ClientThread.sendMessage("create-new-room-request;" + getNewRoomData()));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
+        } catch (ChineseCheckersException e) {
+            new ChineseCheckersWindowException(e.getMessage()).showWindow();
         }
     }
     //gameOptions format: "numberOfModes;numberOfPlayers;numberOfAI;[modes];[players];[ai]"
@@ -98,7 +98,11 @@ public class CreateRoom {
     }
 
     // return pattern: "mode;players;ai"
-    private String getNewRoomData(){
-        return (((ToggleButton) gameModeList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfPlayersList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfAIPlayersList.getSelectedToggle()).getText());
+    private String getNewRoomData() throws ChineseCheckersException {
+        if (gameModeList.getSelectedToggle() != null && numberOfAIPlayersList.getSelectedToggle() != null && numberOfAIPlayersList.getSelectedToggle() != null) {
+            return (((ToggleButton) gameModeList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfPlayersList.getSelectedToggle()).getText() + ";") + (((ToggleButton) numberOfAIPlayersList.getSelectedToggle()).getText());
+        } else {
+            throw new ChineseCheckersException("Select all options");
+        }
     }
 }

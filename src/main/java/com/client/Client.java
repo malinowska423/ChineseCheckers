@@ -7,12 +7,12 @@ public class Client {
         GUI.main(null);
     }
 
-    public static void logIn(String nick) {
+    public static void logIn(String nick) throws ChineseCheckersException {
         Client.nick = nick;
-        Client.playerId = Integer.parseInt(ClientThread.sendMessage(nick));
+        Client.playerId = Integer.parseInt(ClientThread.sendMessage("create-player;" + nick));
     }
 
-    public static void logOut() {
+    public static void logOut() throws ChineseCheckersException {
         ClientThread.closeSocket();
     }
 }

@@ -13,13 +13,13 @@ public class ClientThread implements Runnable{
     private static BufferedReader in;
     private static Socket clientSocket;
 
-    public ClientThread() {
+    public ClientThread() throws ChineseCheckersException {
         try {
             clientSocket = new Socket("localhost", 7554);
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new ChineseCheckersException(e.getMessage());
         }
     }
 
@@ -27,24 +27,33 @@ public class ClientThread implements Runnable{
     public void run() {
     }
 
-    public static String sendMessage(String message) {
-        //TODO: make this method throw ChineseCheckersException
+    public static String sendMessage(String message) throws ChineseCheckersException {
         out.println(message);
-        String answer;
-        try {
-            answer = in.readLine();
-            return Objects.requireNonNullElse(answer, "");
-        } catch (IOException e) {
-            return "";
+        if (!message.equals("close")) {
+            try {
+                String answer = in.readLine();
+                String [] code = answer.split(";");
+                if (code[0].equals("error")){
+                    throw new ChineseCheckersException(code[1]);
+                } else {
+                    return answer;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ChineseCheckersException(e.getMessage());
+            }
+        } else {
+            return "disconnected";
         }
     }
 
-    public static void closeSocket() {
-        ClientThread.sendMessage("pend");
+    public static void closeSocket() throws ChineseCheckersException {
+        ClientThread.sendMessage("close");
         try {
             clientSocket.close();
+            System.exit(0);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new ChineseCheckersException(e.getMessage());
         }
     }
 }

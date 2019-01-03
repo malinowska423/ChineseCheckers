@@ -26,24 +26,32 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Platform.runLater(new ClientThread());
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/roomList.fxml"));
-        Parent root = loader.load();
-        RoomList controller = loader.getController();
-        controller.refresh();
-        primaryStage.setTitle("Chinese Checkers Pro");
-        primaryStage.setScene(new Scene(root, 1280, 720));
-        primaryStage.setResizable(false);
-        primaryStage.setOnCloseRequest(e -> {
-            Client.logOut();
-            Platform.exit();
-        });
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
-        launchGetNickScene();
-        primaryStage.show();
+        try {
+            Platform.runLater(new ClientThread());
+            launchGetNickScene();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/roomList.fxml"));
+            Parent root = loader.load();
+//            RoomList controller = loader.getController();
+            primaryStage.setTitle("Chinese Checkers Pro");
+            primaryStage.setScene(new Scene(root, 1280, 720));
+            primaryStage.setResizable(false);
+            primaryStage.setOnCloseRequest(e -> {
+                try {
+                    Client.logOut();
+                } catch (ChineseCheckersException ex) {
+                    new ChineseCheckersWindowException(ex.getMessage()).showWindow();
+                }
+                Platform.exit();
+            });
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
+//            controller.refresh();
+            primaryStage.show();
+        } catch (ChineseCheckersException e) {
+            new ChineseCheckersWindowException("Cannot connect to server").showWindow();
+        }
     }
 
-    public void launchGetNickScene() {
+    public void launchGetNickScene() throws ChineseCheckersWindowException {
         GridPane layout = new GridPane();
         Stage welcomeWindow = new Stage();
         welcomeWindow.setTitle("Welcome!");
@@ -57,17 +65,6 @@ public class GUI extends Application {
         layout.setHgap(10);
         layout.setVgap(20);
         layout.setAlignment(Pos.CENTER);
-        nickField.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
-                Client.logIn(nickField.getText());
-                welcomeWindow.close();
-            }   else if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                Client.logOut();
-                welcomeWindow.close();
-                Platform.exit();
-
-            }
-        });
         Scene dialogScene = new Scene(layout, 400, 150);
         layout.setStyle("-fx-background-color: #2783e2; -fx-font-size: 15px;");
         welcome.setStyle("-fx-text-fill: #fff; -fx-text-alignment: center; -fx-font-family: 'Berlin Sans FB'; -fx-font-size: 22px");
@@ -77,6 +74,21 @@ public class GUI extends Application {
         welcomeWindow.initModality(Modality.APPLICATION_MODAL);
         welcomeWindow.initStyle(StageStyle.UNDECORATED);
         welcomeWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
+
+        nickField.setOnKeyPressed(keyEvent -> {
+            try {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    Client.logIn(nickField.getText());
+                    welcomeWindow.close();
+                }   else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    Client.logOut();
+                    welcomeWindow.close();
+                    Platform.exit();
+                }
+            } catch (ChineseCheckersException e) {
+                new ChineseCheckersWindowException(e.getMessage()).showWindow();
+            }
+        });
         welcomeWindow.showAndWait();
     }
 
