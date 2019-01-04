@@ -12,13 +12,14 @@ import java.util.ArrayList;
 
 public class BasicBoardBuilder extends BoardBuilder {
     Circle moveCircle = null;
+    String moveStyle;
     ArrayList<BoardCircle> pawnsList = new ArrayList<>();
 
 
     @Override
     public void buildBoard(int playerId, String s, Pane pane) {
 
-        System.out.println(s);
+//        System.out.println(s);
         double inset = 10;
 
         pane.getChildren().add(new Circle(0,0,1));
@@ -155,9 +156,10 @@ public class BasicBoardBuilder extends BoardBuilder {
                         double x = circle.getCenterX();
                         System.out.println("Y: " + Math.floor((y+10) / ygap) + " X: " + Math.floor((x+10)/(2*xgap)));
                         if(moveCircle != null) {
-                            moveCircle.setStyle("-fx-fill: green");
+                            moveCircle.setStyle(moveStyle);
                         }
                         moveCircle = circle;
+                        moveStyle = circle.getStyle();
                         moveCircle.setStyle("-fx-fill: coral");
                     });
                 }
@@ -192,7 +194,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                                 ft.play();
                                 ft.setOnFinished(actionEvent -> {
 
-                                    moveCircle.setStyle("-fx-fill: green");
+                                    moveCircle.setStyle(moveStyle);
                                     moveCircle.setCenterY(y);
                                     moveCircle.setCenterX(x);
                                     moveCircle.toFront();

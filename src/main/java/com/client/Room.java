@@ -92,6 +92,7 @@ public class Room {
             String gameMode = data[3 + 2*numberOfPlayers];
             int playerId = Integer.parseInt(data[4 + 2*numberOfPlayers]);
             String board = data[5 + 2*numberOfPlayers];
+            board = board.replace("\\n", "\n");
             loadBoard(gameMode,playerId,board);
         } else {
             throw new ChineseCheckersException("Empty room data");

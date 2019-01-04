@@ -67,6 +67,13 @@ public class RoomList {
     
     private void loadRoomList(String [] availableRooms) {
         roomList.getChildren().removeAll(roomList.getChildren());
+        if (availableRooms[0].equals("")) {
+            ToggleButton room = new ToggleButton("No rooms available");
+            room.setDisable(true);
+            room.getStyleClass().add("list-item");
+            roomList.getChildren().add(room);
+            return;
+        }
         for (String datum :
                 availableRooms) {
             addToRoomList(datum);

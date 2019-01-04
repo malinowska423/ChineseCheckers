@@ -49,7 +49,7 @@ public class CreateRoom {
 //                            " - - - - - - o o - - - - - - - \n" +
 //                            "- - - - - - - o - - - - - - - \n";
 //            String roomData = "221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in;
-            GUI.getInstance().launchGameRoomScene(ClientThread.sendMessage("create-new-room-request;" + getNewRoomData()));
+            GUI.getInstance().launchGameRoomScene(ClientThread.sendMessage("create-new-room;" + getNewRoomData()));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         } catch (ChineseCheckersException e) {
