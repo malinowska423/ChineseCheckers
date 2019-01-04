@@ -15,6 +15,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+
 public class GUI extends Application {
     private Stage newWindow;
     private static GUI instance;
@@ -103,12 +105,12 @@ public class GUI extends Application {
         return instance;
     }
 
-    public void launchCreateRoomScene(String gameOptions) throws ChineseCheckersWindowException{
+    public void launchCreateRoomScene(String gameModes) throws ChineseCheckersWindowException{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/createRoom.fxml"));
             Parent root = loader.load();
             CreateRoom controller = loader.getController();
-            controller.initialize(gameOptions);
+            controller.initialize(gameModes);
             newWindow = new Stage();
             newWindow.setScene(new Scene(root, 400,500));
             newWindow.setResizable(false);
@@ -140,7 +142,7 @@ public class GUI extends Application {
             newWindow.setOnCloseRequest(e -> Room.endGame());
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
             newWindow.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new ChineseCheckersWindowException("FXML error: " + e.getMessage());
         }
     }

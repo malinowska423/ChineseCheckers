@@ -19,7 +19,7 @@ public class RoomList {
     @FXML
     private void newRoom(){
         try {
-            GUI.getInstance().launchCreateRoomScene(ClientThread.sendMessage("new-room-data"));
+            GUI.getInstance().launchCreateRoomScene(ClientThread.sendMessage("new-room-game-modes"));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         } catch (ChineseCheckersException e) {

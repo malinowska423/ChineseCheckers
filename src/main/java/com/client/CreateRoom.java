@@ -2,6 +2,7 @@ package com.client;
 
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
@@ -17,38 +18,33 @@ public class CreateRoom {
     HBox numberOfPlayers;
     @FXML
     HBox numberOfAIPlayers;
+    @FXML
+    Button createButton;
 
 
 
-    public void initialize(String options) throws ChineseCheckersWindowException{
+    public void initialize(String gameModes) throws ChineseCheckersWindowException{
+        createButton.setDisable(true);
         try {
-            updateList(options);
+            setListData(gameModes.split(";"), gameMode, gameModeList, "mode_item");
         } catch (ChineseCheckersException e) {
             throw new ChineseCheckersWindowException(e.getMessage());
+        }
+        for (Node option :
+                gameMode.getChildren()) {
+            option.setOnMouseClicked(mouseEvent -> {
+                clearList(numberOfAIPlayers, numberOfAIPlayersList);
+                try {
+                    setListData(ClientThread.sendMessage("new-room-capacity;" + ((ToggleButton) option).getText()).split(";"), numberOfPlayers, numberOfPlayersList, "player_item");
+                } catch (ChineseCheckersException e) {
+                    new ChineseCheckersWindowException(e.getMessage()).showWindow();
+                }
+            });
         }
     }
     @FXML
     private void createRoom(){
         try {
-//            String in =
-//                    "- - - - - - - 1 - - - - - - - \n" +
-//                            " - - - - - - 1 1 - - - - - - - \n" +
-//                            "- - - - - - 1 1 1 - - - - - - \n" +
-//                            " - - - - - 1 1 1 1 - - - - - - \n" +
-//                            "- o o o o o o o o o 2 2 2 2 - \n" +
-//                            " - o o o o o o o o o 2 2 2 - - \n" +
-//                            "- - o o o o o o o o o 2 2 - - \n" +
-//                            " - - o o o o o o o o o 2 - - - \n" +
-//                            "- - - o o o o o o o o o - - - \n" +
-//                            " - - o o o o o o o o o 3 - - - \n" +
-//                            "- - o o o o o o o o o 3 3 - - \n" +
-//                            " - o o o o o o o o o 3 3 3 - - \n" +
-//                            "- o o o o o o o o o 3 3 3 3 - \n" +
-//                            " - - - - - o o o o - - - - - - \n" +
-//                            "- - - - - - o o o - - - - - - \n" +
-//                            " - - - - - - o o - - - - - - - \n" +
-//                            "- - - - - - - o - - - - - - - \n";
-//            String roomData = "221;Go on!;3;Player #42;Player #15;Player #11;green;blue;red;Basic;3;" + in;
             GUI.getInstance().launchGameRoomScene(ClientThread.sendMessage("create-new-room;" + getNewRoomData()));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
@@ -56,46 +52,41 @@ public class CreateRoom {
             new ChineseCheckersWindowException(e.getMessage()).showWindow();
         }
     }
-    //gameOptions format: "numberOfModes;numberOfPlayers;numberOfAI;[modes];[players];[ai]"
-    public void updateList(String gameOptions) throws ChineseCheckersException {
-        if (gameOptions != null && !gameOptions.isEmpty()) {
-            String [] options = gameOptions.split(";");
-            int [] values = new int[3];
-            for (int i=0; i < 3; i++ ) {
-                values[i] = Integer.parseInt(options[i]);
+
+    private void setListData(String [] data, HBox node, ToggleGroup list, String style) throws ChineseCheckersException{
+        if (data != null && data.length > 0) {
+            clearList(node, list);
+            ToggleButton option;
+            for (String datum : data) {
+                option = new ToggleButton(datum);
+                list.getToggles().add(option);
+                node.getChildren().add(option);
+                option.getStyleClass().add(style);
             }
-            String [][] info = new String[3][];
-            int index = 3;
-            for (int k = 0; k < 3; k++) {
-                info[k] = new String [values[k]];
-                for (int i = 0; i < values[k]; index++, i++) {
-                    info[k][i] = options[index];
-                }
+            for (Node optionPlayer :
+                    numberOfPlayers.getChildren()) {
+                optionPlayer.setOnMouseClicked(mouseEvent -> {
+                    try {
+                        int capacity = Integer.parseInt(((ToggleButton) optionPlayer).getText());
+                        String [] aiList = new String[capacity];
+                        for (int i=0; i < capacity; i++) {
+                            aiList[i] = i + "";
+                        }
+                        setListData(aiList, numberOfAIPlayers, numberOfAIPlayersList, "player_item");
+                    } catch (ChineseCheckersException e) {
+                        new ChineseCheckersWindowException(e.getMessage()).showWindow();
+                    }
+                });
             }
-            setListsData(info[0], info[1], info[2]);
+            for (Node optionAI :
+                    numberOfAIPlayers.getChildren()) {
+                optionAI.setOnMouseClicked(mouseEvent -> createButton.setDisable(false));
+            }
         } else {
             throw new ChineseCheckersException("Empty list of options");
         }
     }
 
-    private void setListsData(String [] modes, String [] players, String [] ai){
-        setListData(modes, gameMode, gameModeList, "mode_item");
-        setListData(players, numberOfPlayers, numberOfPlayersList, "player_item");
-        setListData(ai, numberOfAIPlayers, numberOfAIPlayersList, "player_item");
-    }
-
-    private void setListData(String [] data, HBox node, ToggleGroup list, String style) {
-        list.getToggles().removeAll(list.getToggles());
-        node.getChildren().removeAll(node.getChildren());
-        ToggleButton mode;
-        for (String datum : data) {
-            mode = new ToggleButton(datum);
-            list.getToggles().add(mode);
-            node.getChildren().add(mode);
-            mode.getStyleClass().add(style);
-        }
-
-    }
 
     // return pattern: "mode;players;ai"
     private String getNewRoomData() throws ChineseCheckersException {
@@ -104,5 +95,10 @@ public class CreateRoom {
         } else {
             throw new ChineseCheckersException("Select all options");
         }
+    }
+
+    private void clearList(HBox node, ToggleGroup list) {
+        list.getToggles().removeAll(list.getToggles());
+        node.getChildren().removeAll(node.getChildren());
     }
 }

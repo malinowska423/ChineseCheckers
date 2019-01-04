@@ -12,7 +12,7 @@
       <Label alignment="CENTER_RIGHT" layoutX="177.0" layoutY="85.0" prefHeight="38.0" prefWidth="181.0" styleClass="mode_label" text="Game mode" />
       <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="177.0" layoutY="263.0" prefHeight="38.0" prefWidth="181.0" styleClass="mode_label" text="Number of players" />
       <Label alignment="CENTER_RIGHT" layoutX="177.0" layoutY="326.0" prefHeight="38.0" prefWidth="181.0" styleClass="mode_label" text="Number of AI players" />
-      <Button defaultButton="true" layoutX="158.0" layoutY="422.0" mnemonicParsing="false" onAction="#createRoom" prefHeight="44.0" prefWidth="121.0" text="Create" />
+      <Button fx:id="createButton" defaultButton="true" layoutX="158.0" layoutY="422.0" mnemonicParsing="false" onAction="#createRoom" prefHeight="44.0" prefWidth="121.0" text="Create" />
       <HBox fx:id="numberOfPlayers" layoutX="43.0" layoutY="301.0" prefHeight="31.0" prefWidth="313.0" />
       <ScrollPane id="modeList" layoutX="43.0" layoutY="122.0" vbarPolicy="NEVER">
          <content>

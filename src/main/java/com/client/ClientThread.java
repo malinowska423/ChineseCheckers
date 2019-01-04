@@ -27,7 +27,7 @@ public class ClientThread implements Runnable{
     public void run() {
     }
 
-    public static String sendMessage(String message) throws ChineseCheckersException {
+    public static synchronized String sendMessage(String message) throws ChineseCheckersException {
         out.println(message);
         if (!message.equals("close")) {
             try {
