@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 
 public abstract class BoardBuilder {
 
-    public abstract void buildBoard (int playerId, String s, Pane pane);
+    public abstract void buildBoard (int playerId, String s, Pane pane, String [] colors);
 
     public static BoardBuilder runBuilder(String type) throws ChineseCheckersWindowException{
         switch (type) {

@@ -37,14 +37,14 @@ public class Room {
         //TODO: send info to server about staring game
     }
 
-    public void loadBoard(String type, int playerId, String board) {
+    public void loadBoard(String type, int playerId, String board, String [] colors) {
         BoardBuilder boardBuilder = null;
         try {
             boardBuilder = BoardBuilder.runBuilder(type);
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         }
-        boardBuilder.buildBoard(playerId, board, pane);
+        boardBuilder.buildBoard(playerId, board, pane, colors);
     }
 
     private void loadTitle(String name) {
@@ -91,7 +91,7 @@ public class Room {
             int playerId = Integer.parseInt(data[4 + 2*numberOfPlayers]);
             String board = data[5 + 2*numberOfPlayers];
             board = board.replace("\\n", "\n");
-            loadBoard(gameMode,playerId,board);
+            loadBoard(gameMode,playerId,board, colors);
         } else {
             throw new ChineseCheckersException("Empty room data");
         }

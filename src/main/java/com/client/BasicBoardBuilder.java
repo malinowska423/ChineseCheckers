@@ -17,7 +17,7 @@ public class BasicBoardBuilder extends BoardBuilder {
 
 
     @Override
-    public void buildBoard(int playerId, String s, Pane pane) {
+    public void buildBoard(int playerId, String s, Pane pane, String [] pawnsColors) {
 
 //        System.out.println(s);
         double inset = 10;
@@ -97,7 +97,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                             circle.setPlayable(true);
                             pawnsList.add(circle);
                         }
-                        circle.setStyle("-fx-fill: red;");
+                        circle.setStyle("-fx-fill: " + pawnsColors[0] + ";");
 
                     }
                     break;
@@ -106,7 +106,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                             circle.setPlayable(true);
                             pawnsList.add(circle);
                         }
-                        circle.setStyle("-fx-fill: green;");
+                        circle.setStyle("-fx-fill: " + pawnsColors[1] + ";");
 
                     }
                     break;
@@ -115,7 +115,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                             circle.setPlayable(true);
                             pawnsList.add(circle);
                         }
-                        circle.setStyle("-fx-fill: blue;");
+                        circle.setStyle("-fx-fill: " + pawnsColors[2] + ";");
 
                     }
                     break;
@@ -124,7 +124,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                             circle.setPlayable(true);
                             pawnsList.add(circle);
                         }
-                        circle.setStyle("-fx-fill: purple;");
+                        circle.setStyle("-fx-fill: " + pawnsColors[3] + ";");
 
                     }
                     break;
@@ -133,7 +133,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                             circle.setPlayable(true);
                             pawnsList.add(circle);
                         }
-                        circle.setStyle("-fx-fill: brown;");
+                        circle.setStyle("-fx-fill: " + pawnsColors[4] + ";");
 
                     }
                     break;
@@ -142,7 +142,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                             circle.setPlayable(true);
                             pawnsList.add(circle);
                         }
-                        circle.setStyle("-fx-fill: yellow;");
+                        circle.setStyle("-fx-fill: " + pawnsColors[5] + ";");
                     }
                     break;
                 }
