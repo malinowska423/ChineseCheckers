@@ -25,7 +25,9 @@ public class Room {
         } catch (ChineseCheckersException e) {
             throw new ChineseCheckersWindowException(e.getMessage());
         }
-        Platform.runLater(new RoomThread(this));
+        Thread thread = new Thread(new RoomThread(this));
+        thread.start();
+//        Platform.runLater(thread);
     }
 
 

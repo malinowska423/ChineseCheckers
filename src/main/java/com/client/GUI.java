@@ -39,6 +39,7 @@ public class GUI extends Application {
             primaryStage.setResizable(false);
             primaryStage.setOnCloseRequest(e -> {
                 try {
+                    e.consume();
                     Client.logOut();
                     Platform.exit();
                 } catch (ChineseCheckersException ex) {

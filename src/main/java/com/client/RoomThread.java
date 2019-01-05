@@ -11,14 +11,14 @@ public class RoomThread implements Runnable {
     @Override
     public void run() {
 
-//            while (true) {
-//                try {
-//                    System.out.println("waiting...");
-//                    room.loadRoom(ClientThread.receiveMessage());
-//                } catch (ChineseCheckersException e) {
-//                    new ChineseCheckersWindowException(e.getMessage()).showWindow();
-//                }
-//            }
+            while (true) {
+                try {
+                    System.out.println("waiting...");
+                    room.loadRoom(ClientThread.receiveMessage());
+                } catch (ChineseCheckersException e) {
+                    new ChineseCheckersWindowException(e.getMessage()).showWindow();
+                }
+            }
 
     }
 }
