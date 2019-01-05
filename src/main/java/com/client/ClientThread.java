@@ -47,6 +47,14 @@ public class ClientThread implements Runnable{
         }
     }
 
+    public static synchronized String receiveMessage() throws ChineseCheckersException{
+        try {
+            return in.readLine();
+        } catch (IOException e) {
+            throw new ChineseCheckersException(e.getMessage());
+        }
+    }
+
     public static void closeSocket() throws ChineseCheckersException {
         ClientThread.sendMessage("close");
         try {

@@ -40,10 +40,10 @@ public class GUI extends Application {
             primaryStage.setOnCloseRequest(e -> {
                 try {
                     Client.logOut();
+                    Platform.exit();
                 } catch (ChineseCheckersException ex) {
                     new ChineseCheckersWindowException(ex.getMessage()).showWindow();
                 }
-                Platform.exit();
             });
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
 //            controller.refresh();
@@ -131,6 +131,7 @@ public class GUI extends Application {
             Parent root = loader.load();
             Room controller = loader.getController();
             controller.initialize(roomData);
+            Client.enterRoom(controller);
             if (newWindow != null && newWindow.getTitle().equals("Create new room")) {
                 newWindow.close();
             }
@@ -139,7 +140,10 @@ public class GUI extends Application {
             newWindow.setScene(new Scene(root, 1280, 720));
             newWindow.setResizable(false);
             newWindow.setTitle("Chinese Checkers Pro - Room #" + roomId);
-            newWindow.setOnCloseRequest(e -> Room.endGame());
+            newWindow.setOnCloseRequest(e -> {
+                Room.endGame();
+                Client.leaveRoom(controller);
+            });
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
             newWindow.show();
         } catch (IOException e) {

@@ -1,5 +1,6 @@
 package com.client;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,6 +25,7 @@ public class Room {
         } catch (ChineseCheckersException e) {
             throw new ChineseCheckersWindowException(e.getMessage());
         }
+        Platform.runLater(new RoomThread(this));
     }
 
 
@@ -37,7 +39,7 @@ public class Room {
         //TODO: send info to server about staring game
     }
 
-    public void loadBoard(String type, int playerId, String board, String [] colors) {
+    private void loadBoard(String type, int playerId, String board, String [] colors) {
         BoardBuilder boardBuilder = null;
         try {
             boardBuilder = BoardBuilder.runBuilder(type);
@@ -65,13 +67,14 @@ public class Room {
                 item.getStyleClass().add("bg_color");
             }
         }
-        for(int i = 0; i < colors.length ; i++) {
+
+        for(int i = 0; i < players.length ; i++) {
             playersList.getChildren().get(i).setStyle("-fx-text-fill: " + colors[i] + ";");
         }
         playersList.getChildren().get(0).getStyleClass().add("first");
     }
 
-    private void loadRoom(String roomData) throws ChineseCheckersException {
+    public void loadRoom(String roomData) throws ChineseCheckersException {
         if (roomData != null && !roomData.isEmpty()){
             //roomData pattern: "roomId;message;numberOfPlayers;[players];[colors];gameMode;playerId;board"
             String [] data = roomData.split(";");
@@ -79,21 +82,32 @@ public class Room {
             loadInfo(data[1]);
             int numberOfPlayers = Integer.parseInt(data[2]);
             String [] players = new String [numberOfPlayers];
-            String [] colors = new String[numberOfPlayers];
-            int playerIndex = 3;
-            int colorIndex = 3 + numberOfPlayers;
-            for (int i = 0; i < numberOfPlayers; i++, playerIndex++, colorIndex++) {
-                players[i] = data[playerIndex];
-                colors[i] = data[colorIndex];
+            String [] colors = new String[6];
+            int index = 3;
+            for (int i = 0; i < numberOfPlayers; i++, index++) {
+                players[i] = data[index];
             }
-            loadPlayers(players, colors);
-            String gameMode = data[3 + 2*numberOfPlayers];
-            int playerId = Integer.parseInt(data[4 + 2*numberOfPlayers]);
-            String board = data[5 + 2*numberOfPlayers];
+            for (int i = 0; i < 6; i++, index++) {
+                colors[i] = data[index];
+            }
+            String gameMode = data[9 + numberOfPlayers];
+            int playerId = Integer.parseInt(data[10 + numberOfPlayers]);
+            String board = data[11 + numberOfPlayers];
             board = board.replace("\\n", "\n");
+            loadPlayers(players, currentColors(board, colors));
             loadBoard(gameMode,playerId,board, colors);
         } else {
             throw new ChineseCheckersException("Empty room data");
         }
+    }
+
+    private String [] currentColors(String board, String [] colors) {
+        StringBuilder currentColors = new StringBuilder();
+        for (int i = 1; i <= 6; i++) {
+            if (board.contains(i + "")) {
+                currentColors.append(colors[i - 1]).append(";");
+            }
+        }
+        return currentColors.toString().split(";");
     }
 }
