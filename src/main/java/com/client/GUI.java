@@ -132,7 +132,6 @@ public class GUI extends Application {
             Parent root = loader.load();
             Room controller = loader.getController();
             controller.initialize(roomData);
-            Client.enterRoom(controller);
             if (newWindow != null && newWindow.getTitle().equals("Create new room")) {
                 newWindow.close();
             }
@@ -142,10 +141,16 @@ public class GUI extends Application {
             newWindow.setResizable(false);
             newWindow.setTitle("Chinese Checkers Pro - Room #" + roomId);
             newWindow.setOnCloseRequest(e -> {
-                Room.endGame();
-                Client.leaveRoom(controller);
+                e.consume();
+                try {
+                    controller.leaveRoom();
+                    newWindow.close();
+                } catch (ChineseCheckersException e1) {
+                    new ChineseCheckersWindowException(e1.getMessage()).showWindow();
+                }
             });
             newWindow.getIcons().add(new Image(getClass().getResourceAsStream("/images/room_ico.png")));
+            newWindow.initModality(Modality.APPLICATION_MODAL);
             newWindow.show();
         } catch (IOException e) {
             throw new ChineseCheckersWindowException("FXML error: " + e.getMessage());

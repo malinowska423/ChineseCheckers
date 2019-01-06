@@ -1,6 +1,5 @@
 package com.client;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,6 +7,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Room {
+    private int roomId;
+    private boolean gameOn;
     @FXML
     Pane pane;
     @FXML
@@ -19,26 +20,42 @@ public class Room {
     @FXML
     Button playButton;
 
+    RoomThread roomThread;
+
+    public int getRoomId() {
+        return roomId;
+    }
+
     public void initialize(String data) throws ChineseCheckersWindowException{
         try {
             loadRoom(data);
+            roomId = Integer.parseInt(data.split(";")[0]);
+            gameOn = false;
         } catch (ChineseCheckersException e) {
             throw new ChineseCheckersWindowException(e.getMessage());
         }
-        Thread thread = new Thread(new RoomThread(this));
-        thread.start();
-//        Platform.runLater(thread);
     }
 
-
-    public static void endGame(){
-        //TODO: implement method that lets get out of room only if game is over for the player
+    public void leaveRoom() throws ChineseCheckersException{
+        if (!isGameOn()) {
+            ClientThread.sendMessage("room-request;" + roomId + ";leave-room");
+        } else {
+            throw new ChineseCheckersException("Finish the game first");
+        }
     }
 
     @FXML
     private void play(){
-        playButton.setDisable(true);
-        //TODO: send info to server about staring game
+        try {
+            ClientThread.sendMessage("room-request;"+ roomId +";start-game");
+            playButton.setDisable(true);
+            gameOn = true;
+            roomThread = new RoomThread(this);
+            Thread thread = new Thread(roomThread);
+            thread.start();
+        } catch (ChineseCheckersException e) {
+            new ChineseCheckersWindowException(e.getMessage()).showWindow();
+        }
     }
 
     private void loadBoard(String type, int playerId, String board, String [] colors) {
@@ -51,11 +68,15 @@ public class Room {
         boardBuilder.buildBoard(playerId, board, pane, colors);
     }
 
+    public void updateBoard(String coordinates) {
+        //TODO: call method in Board
+    }
+
     private void loadTitle(String name) {
         title.setText(name);
     }
 
-    private void loadInfo(String info){
+    public void loadInfo(String info){
         infoDisplay.setText(info);
     }
 
@@ -77,6 +98,7 @@ public class Room {
     }
 
     public void loadRoom(String roomData) throws ChineseCheckersException {
+        System.out.println(roomData);
         if (roomData != null && !roomData.isEmpty()){
             //roomData pattern: "roomId;message;numberOfPlayers;[players];[colors];gameMode;playerId;board"
             String [] data = roomData.split(";");
@@ -111,5 +133,9 @@ public class Room {
             }
         }
         return currentColors.toString().split(";");
+    }
+
+    public boolean isGameOn() {
+        return gameOn;
     }
 }
