@@ -6,6 +6,7 @@ import javafx.scene.shape.Polygon;
 public class Hexagon extends Polygon {
     private double centerX;
     private double centerY;
+    private BoardCircle circle;
 
 
     public Hexagon(double centerX, double centerY, double radius){
@@ -22,8 +23,16 @@ public class Hexagon extends Polygon {
                 centerX-radius, centerY+ytemp,
         };
         this.getPoints().addAll(points);
+        circle = null;
     }
 
+    public BoardCircle getCircle() {
+        return circle;
+    }
+
+    public void setCircle(BoardCircle circle) {
+        this.circle = circle;
+    }
 
     public double getCenterX() {
         return centerX;

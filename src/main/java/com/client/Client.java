@@ -1,18 +1,22 @@
 package com.client;
 
+import javafx.application.Platform;
+
 public class Client {
-    public static String nick;
-    public static int playerId;
+
     public static void main(String[] args) {
         GUI.main(null);
     }
 
-    public static void logIn(String nick) throws ChineseCheckersException {
-        Client.nick = nick;
-        Client.playerId = Integer.parseInt(ClientThread.sendMessage("create-player;" + nick));
+    static void connectToServer() throws ChineseCheckersException {
+        Platform.runLater(new ClientThread());
     }
 
-    public static void logOut() throws ChineseCheckersException {
+    static void logIn(String nick) {
+        ClientThread.sendMessage("create-player;" + nick);
+    }
+
+    static void logOut() throws ChineseCheckersException {
         ClientThread.closeSocket();
     }
 }

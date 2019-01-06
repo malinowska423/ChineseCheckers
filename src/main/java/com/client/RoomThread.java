@@ -5,66 +5,86 @@ import javafx.application.Platform;
 public class RoomThread implements Runnable {
 
     private Room room;
-    private boolean myTurn;
+    private boolean isRunning;
 
-    public RoomThread(Room room)  {
+    RoomThread(Room room)  {
         this.room = room;
-        myTurn = false;
     }
 
     @Override
     public void run() {
-        while (room.isGameOn()) {
+        isRunning = true;
+        while (isRunning) {
             System.out.println("waiting...");
             synchronized (this) {
-                if (!myTurn) {
-
                     String message;
                     try {
                         message = ClientThread.receiveMessage();
-                        handleRequest(message);
+                        if (message.split(";")[0].equals("leave-room")){
+                            break;
+                        } else {
+                            handleRequest(message);
+                        }
                     } catch (ChineseCheckersException e) {
                         Platform.runLater(() -> new ChineseCheckersWindowException(e.getMessage()).showWindow());
+                        break;
                     }
-                } else {
-                    room.takeTurn();
-                    myTurn = false;
-                }
             }
         }
-
     }
 
+    boolean isRunning() {
+        return isRunning;
+    }
 
     //request pattern: "[code];message"
     //response pattern: "room-request;roomId;[code];message"
-    public synchronized void handleRequest(String request) throws ChineseCheckersException{
+    private synchronized void handleRequest(String request) throws ChineseCheckersException{
         String requestCode = request.split(";")[0];
+        System.out.println("\t" + requestCode);
         switch (requestCode) {
-            case "leave-room": {
+            case "your-turn": {
+                isRunning = false;
+                Platform.runLater(() -> room.takeTurn());
                 break;
             }
-            case "update-game": {
-                //pattern: "update-game;[true/false];[move-update];[message-update]"
-                myTurn = Boolean.parseBoolean(request.split(";")[1]);
-                Platform.runLater(() -> {
-                    room.updateBoard(request.split(";")[2]);
-                    room.loadInfo(request.split(":")[3]);
-                });
+            case "you-won": {
+                room.setGameOn(false);
                 break;
             }
+            case "update-board": {
+                //pattern: "update-board;x x x x"
+                Platform.runLater(() -> room.updateBoard(request.split(";")[1]));
+                break;
+            }
+            case "update-info": {
+                Platform.runLater(() -> room.loadInfo(request.split(";")[1]));
+                break;
+            }
+//            case "update-game": {
+//                //pattern: "update-game;[true/false];[move-update];[message-update]"
+//                Platform.runLater(() -> {
+//                    room.updateBoard(request.split(";")[2]);
+//                    room.loadInfo(request.split(";")[3]);
+//                });
+//                break;
+//            }
             case "full-room": {
-                //pattern: "full-room;[true/false - myTurn];message"
-                myTurn = Boolean.parseBoolean(request.split(";")[1]);
+                //pattern: "full-room;message"
+                room.setGameOn(true);
                 Platform.runLater(() -> {
-                    room.loadInfo(request.split(":")[2]);
+                    try {
+                        room.loadRoom(request.split("<")[1]);
+                        room.loadInfo(request.split("<")[2]);
+                    } catch (ChineseCheckersException e) {
+                        e.printStackTrace();
+                    }
                 });
                 break;
             }
             case "update-room": {
                 //pattern: "update-room;[message-update]|[roomInfo]"
                 String roomInfo = request.substring(request.indexOf('|')+1);
-                System.out.println("\t" + roomInfo);
                 Platform.runLater(() -> {
                     try {
                         room.loadRoom(roomInfo);
@@ -75,9 +95,22 @@ public class RoomThread implements Runnable {
                 });
                 break;
             }
+            case "game-over": {
+                room.setGameOn(false);
+                isRunning = false;
+                Platform.runLater(() -> room.loadInfo("Game over, thanks!"));
+                break;
+            }
             default: {
-                throw new ChineseCheckersException(request);
+                throw new ChineseCheckersException("Unhandled: " + request);
             }
         }
+    }
+
+    static void sendMessage(String message) {
+        ClientThread.sendMessage(message);
+    }
+    static String sendRequest(String message) throws ChineseCheckersException{
+        return ClientThread.sendRequest(message);
     }
 }

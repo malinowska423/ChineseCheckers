@@ -9,6 +9,9 @@ import javafx.scene.layout.VBox;
 public class Room {
     private int roomId;
     private boolean gameOn;
+    private RoomThread roomThread;
+    private String moves;
+    private BoardBuilder builder;
     @FXML
     Pane pane;
     @FXML
@@ -20,71 +23,72 @@ public class Room {
     @FXML
     Button playButton;
 
-    private RoomThread roomThread;
-    private String moves;
 
-    public int getRoomId() {
+    int getRoomId() {
         return roomId;
     }
 
-    public void initialize(String data) throws ChineseCheckersWindowException{
+    void initialize(String data) throws ChineseCheckersWindowException{
         try {
             loadRoom(data);
             roomId = Integer.parseInt(data.split(";")[0]);
             gameOn = false;
+            moves = "";
         } catch (ChineseCheckersException e) {
             throw new ChineseCheckersWindowException(e.getMessage());
         }
     }
 
-    public void leaveRoom() throws ChineseCheckersException{
-        if (!isGameOn()) {
-            ClientThread.sendMessage("room-request;" + roomId + ";leave-room");
+    void leaveRoom() throws ChineseCheckersException{
+        if (isGameOn() || (roomThread != null && roomThread.isRunning())) {
+            throw new ChineseCheckersException("You cannot leave during the game");
         } else {
-            throw new ChineseCheckersException("Finish the game first");
+            RoomThread.sendRequest("room-request;" + roomId + ";leave-room");
         }
     }
 
     @FXML
     private void play(){
-        try {
-            ClientThread.sendMessage("room-request;"+ roomId +";start-game");
-            playButton.setDisable(true);
-            gameOn = true;
-            roomThread = new RoomThread(this);
-            Thread thread = new Thread(roomThread);
-            thread.start();
-        } catch (ChineseCheckersException e) {
-            new ChineseCheckersWindowException(e.getMessage()).showWindow();
-        }
+        RoomThread.sendMessage("room-request;"+ roomId +";start-game");
+        playButton.setDisable(true);
+        roomThread = new RoomThread(this);
+        new Thread(roomThread).start();
     }
 
     private void loadBoard(String type, int playerId, String board, String [] colors) {
-        BoardBuilder boardBuilder = null;
-        try {
-            boardBuilder = BoardBuilder.runBuilder(type);
-        } catch (ChineseCheckersWindowException e) {
-            e.showWindow();
+        if(gameOn) {
+            try {
+                builder = BoardBuilder.runBuilder(type);
+            } catch (ChineseCheckersWindowException e) {
+                e.showWindow();
+            }
+            builder.buildBoard(playerId, board, pane, colors, this);
         }
-        boardBuilder.buildBoard(playerId, board, pane, colors,this);
     }
 
-    public void updateBoard(String coordinates) {
-        //TODO: call method in Board
+    void updateBoard(String coordinates) {
+        if (!coordinates.equals("pass")) {
+            String[] data = coordinates.split(" ");
+            int[] parsedData = new int[4];
+            for (int i = 0; i < 4; i++) {
+                parsedData[i] = Integer.parseInt(data[i]);
+            }
+            builder.updateBoard(parsedData[0], parsedData[1], parsedData[2], parsedData[3]);
+        }
     }
 
     private void loadTitle(String name) {
         title.setText(name);
     }
 
-    public void loadInfo(String info){
+    void loadInfo(String info){
         infoDisplay.setText(info);
     }
 
     private void loadPlayers(String [] players, String [] colors) {
         playersList.getChildren().removeAll(playersList.getChildren());
         for (String player:
-             players) {
+                players) {
             Label item = new Label(player);
             playersList.getChildren().add(item);
             if (playersList.getChildren().indexOf(item)%2 == 0){
@@ -98,8 +102,7 @@ public class Room {
         playersList.getChildren().get(0).getStyleClass().add("first");
     }
 
-    public void loadRoom(String roomData) throws ChineseCheckersException {
-        System.out.println(roomData);
+    void loadRoom(String roomData) throws ChineseCheckersException {
         if (roomData != null && !roomData.isEmpty()){
             //roomData pattern: "roomId;message;numberOfPlayers;[players];[colors];gameMode;playerId;board"
             String [] data = roomData.split(";");
@@ -136,34 +139,31 @@ public class Room {
         return currentColors.toString().split(";");
     }
 
-    public boolean isGameOn() {
+    private boolean isGameOn() {
         return gameOn;
     }
 
-    public void takeTurn() {
-        try {
-            roomThread.wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    void setGameOn(boolean gameOn) {
+        this.gameOn = gameOn;
+    }
+
+    void takeTurn() {
+        builder.activatePawns();
         playButton.setText("Send your move");
         playButton.setDisable(false);
-        playButton.setOnMouseClicked(mouseEvent -> {
-            if(!moves.isEmpty()) {
-                try {
-                    ClientThread.sendMessage("room-request;" + roomId + ";game-on;<move;" + moves);
-                    playButton.setDisable(true);
-                    roomThread.notify();
-                } catch (ChineseCheckersException e) {
-                    new ChineseCheckersWindowException(e.getMessage()).showWindow();
-                }
-            } else {
-                new ChineseCheckersWindowException("Make move first!").showWindow();
+        playButton.setOnAction(actionEvent -> {
+            if (moves.isEmpty()){
+                moves = "pass";
             }
+            RoomThread.sendMessage("room-request;" + roomId + ";game-on;<move;" + moves);
+            RoomThread.sendMessage("room-request;" + roomId + ";end-turn");
+            playButton.setDisable(true);
+            moves = "";
+            new Thread(roomThread).start();
         });
     }
 
-    public void setMoves(String moves) {
+    void setMoves(String moves) {
         this.moves = moves;
     }
 }

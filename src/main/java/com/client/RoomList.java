@@ -19,7 +19,7 @@ public class RoomList {
     @FXML
     private void newRoom(){
         try {
-            GUI.getInstance().launchCreateRoomScene(ClientThread.sendMessage("new-room-game-modes"));
+            GUI.getInstance().launchCreateRoomScene(ClientThread.sendRequest("new-room-game-modes"));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         } catch (ChineseCheckersException e) {
@@ -40,7 +40,7 @@ public class RoomList {
     private void joinRoom(){
         if (rooms.getSelectedToggle() != null) {
             try {
-                GUI.getInstance().launchGameRoomScene(ClientThread.sendMessage("join-room;" + getSelectedRoomId()));
+                GUI.getInstance().launchGameRoomScene(ClientThread.sendRequest("join-room;" + getSelectedRoomId()));
             } catch (ChineseCheckersWindowException e) {
                 e.showWindow();
             } catch (ChineseCheckersException e) {
@@ -82,7 +82,7 @@ public class RoomList {
 
     private String [] getRoomList() throws ChineseCheckersException {
         //currentRooms pattern: "# # #;# # #;# # #:..."
-        String currentRooms = ClientThread.sendMessage("current-room-list");
+        String currentRooms = ClientThread.sendRequest("current-room-list");
         return currentRooms.split(";");
     }
 

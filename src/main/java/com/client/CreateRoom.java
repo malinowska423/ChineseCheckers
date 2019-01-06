@@ -23,7 +23,7 @@ public class CreateRoom {
 
 
 
-    public void initialize(String gameModes) throws ChineseCheckersWindowException{
+    void initialize(String gameModes) throws ChineseCheckersWindowException{
         createButton.setDisable(true);
         try {
             setListData(gameModes.split(";"), gameMode, gameModeList, "mode_item");
@@ -35,17 +35,18 @@ public class CreateRoom {
             option.setOnMouseClicked(mouseEvent -> {
                 clearList(numberOfAIPlayers, numberOfAIPlayersList);
                 try {
-                    setListData(ClientThread.sendMessage("new-room-capacity;" + ((ToggleButton) option).getText()).split(";"), numberOfPlayers, numberOfPlayersList, "player_item");
+                    setListData(ClientThread.sendRequest("new-room-capacity;" + ((ToggleButton) option).getText()).split(";"), numberOfPlayers, numberOfPlayersList, "player_item");
                 } catch (ChineseCheckersException e) {
                     new ChineseCheckersWindowException(e.getMessage()).showWindow();
                 }
             });
         }
     }
+
     @FXML
     private void createRoom(){
         try {
-            GUI.getInstance().launchGameRoomScene(ClientThread.sendMessage("create-new-room;" + getNewRoomData()));
+            GUI.getInstance().launchGameRoomScene(ClientThread.sendRequest("create-new-room;" + getNewRoomData()));
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         } catch (ChineseCheckersException e) {

@@ -1,5 +1,6 @@
 package com.client;
 
+import javafx.application.Platform;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.Pane;
@@ -10,7 +11,7 @@ public class BasicBoardBuilder extends BoardBuilder {
     private BoardCircle moveCircle;
     private String moveCircleStyle;
     private final ArrayList<BoardCircle> pawnsList = new ArrayList<>();
-    private final Hexagon[][] hexagons = new Hexagon[19][15];;
+    private final Hexagon[][] hexagons = new Hexagon[19][15];
 
     private String defHexStyle;
     private String markedHexStyle;
@@ -63,13 +64,12 @@ public class BasicBoardBuilder extends BoardBuilder {
                 hexagons[convertY(ypos)][convertX(xpos)] = hexagon;
                 hexagon.setStyle(defHexStyle);
                 pane.getChildren().add(hexagon);
-
+                hexagon.setDisable(true);
 
                 if(sign != 'o') {
 
-                    hexagon.setDisable(true);
-
                     BoardCircle circle = new BoardCircle();
+                    hexagon.setCircle(circle);
 
                     circle.setRadius(0.75 * radius);
                     circle.setCenterX(xpos);
@@ -107,9 +107,10 @@ public class BasicBoardBuilder extends BoardBuilder {
                                     double x = circle.getCenterX();
                                     int convY = convertY(y);
                                     int convX = convertX(x);
-                                    System.out.println("Y: " + convY + " X: " + convX);
-                                    String answer = ClientThread.sendMessage("room-request;" + room.getRoomId() + ";game-on;<possible-moves;" + convY + ";" + convX);
-                                    if(!answer.isEmpty()) {
+//                                    System.out.println("Y: " + convY + " X: " + convX);
+//                                    String answer = ClientThread.sendRequest("room-request;" + room.getRoomId() + ";game-on;<possible-moves;" + convY + ";" + convX);
+                                    String answer = getPossibleMoves(convY,convX,room.getRoomId());
+                                    if(!answer.endsWith("<")) {
                                         String[] pairs = answer.split("<")[1].split(";");
                                         for (String pair1 : pairs) {
                                             String[] pair = pair1.split(" ");
@@ -132,17 +133,17 @@ public class BasicBoardBuilder extends BoardBuilder {
                     double y = hexagon.getCenterY();
                     double x = hexagon.getCenterX();
 
-                    System.out.println("Y: " + convertY(y) + " X: " + convertX(x));
+//                    System.out.println("Y: " + convertY(y) + " X: " + convertX(x));
                     if (moveCircle != null) {
 
-                        try {
+//                        try {
                         double moveY = moveCircle.getCenterY();
                         double moveX = moveCircle.getCenterX();
 
-                        String moves = convertY(moveY) + ";" + convertX(moveX) + ";" + convertY(y) + ";" + convertX(x);
+                        String moves = convertY(moveY) + " " + convertX(moveX) + " " + convertY(y) + " " + convertX(x);
                         room.setMoves(moves);
 
-                        ClientThread.sendMessage("room-request;" + room.getRoomId() + ";game-on;<move;" + moves);
+//                        ClientThread.sendRequest("room-request;" + room.getRoomId() + ";game-on;<move;" + moves);
 
                         moveCircle.setStyle(moveCircleStyle);
                         moveCircle.setCenterY(y);
@@ -151,11 +152,11 @@ public class BasicBoardBuilder extends BoardBuilder {
                         moveCircle = null;
 
                         resetHexagons();
-                        } catch (ChineseCheckersException e) {
-                            e.printStackTrace();
-                        }
+//                        } catch (ChineseCheckersException e) {
+//                            e.printStackTrace();
+//                        }
 
-//                        disablePawns();
+                        disablePawns();
 
 //                            FadeTransition ft = new FadeTransition(Duration.millis(150), moveCircle);
 //                            ft.setFromValue(1.0);
@@ -187,7 +188,23 @@ public class BasicBoardBuilder extends BoardBuilder {
 
             }
         }
+        disablePawns();
     }
+
+    @Override
+    public void updateBoard(int y1, int x1, int y2, int x2) {
+        if (hexagons[y1][x1].getCircle() != null) {
+            BoardCircle circle = hexagons[y1][x1].getCircle();
+            circle.setCenterX(hexagons[y2][x2].getCenterX());
+            circle.setCenterY(hexagons[y2][x2].getCenterY());
+            hexagons[y1][x1].setCircle(null);
+            hexagons[y2][x2].setCircle(circle);
+            Platform.runLater(() -> {
+                circle.toFront();
+            });
+        }
+    }
+
 
     private int convertX(double x){
         return (int) Math.floor((x-xinit+10)/(2*xgap));

@@ -21,6 +21,17 @@ public class GUI extends Application {
     private Stage newWindow;
     private static GUI instance;
 
+    static GUI getInstance() {
+        if (instance == null) {
+            synchronized (GUI.class) {
+                if (instance == null) {
+                    instance = new GUI();
+                }
+            }
+        }
+        return instance;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -29,32 +40,15 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            Platform.runLater(new ClientThread());
+            Client.connectToServer();
             launchGetNickScene();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/roomList.fxml"));
-            Parent root = loader.load();
-//            RoomList controller = loader.getController();
-            primaryStage.setTitle("Chinese Checkers Pro");
-            primaryStage.setScene(new Scene(root, 1280, 720));
-            primaryStage.setResizable(false);
-            primaryStage.setOnCloseRequest(e -> {
-                try {
-                    e.consume();
-                    Client.logOut();
-                    Platform.exit();
-                } catch (ChineseCheckersException ex) {
-                    new ChineseCheckersWindowException(ex.getMessage()).showWindow();
-                }
-            });
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
-//            controller.refresh();
-            primaryStage.show();
+            launchRoomListScene(primaryStage);
         } catch (ChineseCheckersException e) {
             new ChineseCheckersWindowException("Cannot connect to server").showWindow();
         }
     }
 
-    public void launchGetNickScene() throws ChineseCheckersWindowException {
+    private void launchGetNickScene() {
         GridPane layout = new GridPane();
         Stage welcomeWindow = new Stage();
         welcomeWindow.setTitle("Welcome!");
@@ -80,7 +74,7 @@ public class GUI extends Application {
 
         nickField.setOnKeyPressed(keyEvent -> {
             try {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
+                if (keyEvent.getCode() == KeyCode.ENTER && !nickField.getText().isEmpty()) {
                     Client.logIn(nickField.getText());
                     welcomeWindow.close();
                 }   else if (keyEvent.getCode() == KeyCode.ESCAPE) {
@@ -95,18 +89,30 @@ public class GUI extends Application {
         welcomeWindow.showAndWait();
     }
 
-    public static GUI getInstance() {
-        if (instance == null) {
-            synchronized (GUI.class) {
-                if (instance == null) {
-                    instance = new GUI();
-                }
+    private void launchRoomListScene(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/roomList.fxml"));
+        Parent root = loader.load();
+        RoomList controller = loader.getController();
+        controller.initialize();
+        primaryStage.setTitle("Chinese Checkers Pro");
+        primaryStage.setScene(new Scene(root, 1280, 720));
+        primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(e -> {
+            try {
+                e.consume();
+                Client.logOut();
+                Platform.exit();
+            } catch (ChineseCheckersException ex) {
+                new ChineseCheckersWindowException(ex.getMessage()).showWindow();
             }
-        }
-        return instance;
+        });
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/cc_pro_ico.png")));
+        primaryStage.show();
     }
 
-    public void launchCreateRoomScene(String gameModes) throws ChineseCheckersWindowException{
+
+
+    void launchCreateRoomScene(String gameModes) throws ChineseCheckersWindowException{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/createRoom.fxml"));
             Parent root = loader.load();
@@ -126,7 +132,7 @@ public class GUI extends Application {
         }
     }
 
-    public void launchGameRoomScene(String roomData) throws ChineseCheckersWindowException {
+    void launchGameRoomScene(String roomData) throws ChineseCheckersWindowException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/room.fxml"));
             Parent root = loader.load();
