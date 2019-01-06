@@ -154,6 +154,7 @@ public class Room {
         playButton.setOnAction(actionEvent -> {
             if (moves.isEmpty()){
                 moves = "pass";
+                builder.reset();
             }
             RoomThread.sendMessage("room-request;" + roomId + ";game-on;<move;" + moves);
             RoomThread.sendMessage("room-request;" + roomId + ";end-turn");

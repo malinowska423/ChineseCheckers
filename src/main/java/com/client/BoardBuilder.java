@@ -7,6 +7,7 @@ public abstract class BoardBuilder {
     public abstract void buildBoard (int playerId, String s, Pane pane, String [] colors,Room room);
     public abstract void updateBoard (int y1, int x1, int y2, int x2);
     public abstract void activatePawns();
+    public abstract void reset();
 
     static BoardBuilder runBuilder(String type) throws ChineseCheckersWindowException{
         switch (type) {

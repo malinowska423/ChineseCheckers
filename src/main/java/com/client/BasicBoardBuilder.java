@@ -224,6 +224,11 @@ public class BasicBoardBuilder extends BoardBuilder {
         }
      }
 
+    @Override
+    public void reset() {
+        resetHexagons();
+    }
+
     public void activatePawns() {
         for (BoardCircle circle : pawnsList) {
             circle.setDisable(false);
