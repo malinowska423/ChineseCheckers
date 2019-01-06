@@ -26,7 +26,7 @@ public class RoomThread implements Runnable {
                             handleRequest(message);
                         }
                     } catch (ChineseCheckersException e) {
-                        Platform.runLater(() -> new ChineseCheckersWindowException(e.getMessage()).showWindow());
+//                        Platform.runLater(() -> new ChineseCheckersWindowException(e.getMessage()).showWindow());
                         break;
                     }
             }

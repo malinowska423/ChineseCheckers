@@ -1,5 +1,7 @@
 package com.client;
 
+import javafx.application.Platform;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,8 +61,10 @@ public class ClientThread implements Runnable{
         try {
             return in.readLine();
         } catch (SocketException e) {
-            new ChineseCheckersWindowException(e.getMessage()).showWindow();
-            System.exit(1);
+            Platform.runLater(() -> {
+                new ChineseCheckersWindowException(e.getMessage()).showWindow();
+                System.exit(1);
+            });
             return "";
         } catch (IOException e) {
             throw new ChineseCheckersException(e.getMessage());
