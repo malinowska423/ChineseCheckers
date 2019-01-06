@@ -33,6 +33,7 @@ public class ClientThread implements Runnable{
         if (!message.equals("close")) {
             try {
                 String answer = in.readLine();
+                System.out.println(answer);
                 String [] code = answer.split(";");
                 if (code[0].equals("error")){
                     throw new ChineseCheckersException(code[1]);

@@ -6,7 +6,6 @@ import javafx.scene.shape.Polygon;
 public class Hexagon extends Polygon {
     private double centerX;
     private double centerY;
-    private boolean isOccupied;
 
 
     public Hexagon(double centerX, double centerY, double radius){
@@ -23,16 +22,8 @@ public class Hexagon extends Polygon {
                 centerX-radius, centerY+ytemp,
         };
         this.getPoints().addAll(points);
-        isOccupied = false;
     }
 
-    public void setOccupied(boolean occupied) {
-        isOccupied = occupied;
-    }
-
-    public boolean isOccupied() {
-        return isOccupied;
-    }
 
     public double getCenterX() {
         return centerX;
