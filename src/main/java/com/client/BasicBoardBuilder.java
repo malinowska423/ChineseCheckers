@@ -193,7 +193,7 @@ public class BasicBoardBuilder extends BoardBuilder {
 
     @Override
     public void updateBoard(int y1, int x1, int y2, int x2) {
-        if (hexagons[y1][x1].getCircle() != null) {
+        if (hexagons[y1][y2] != null && hexagons[y1][x1].getCircle() != null) {
             BoardCircle circle = hexagons[y1][x1].getCircle();
             circle.setCenterX(hexagons[y2][x2].getCenterX());
             circle.setCenterY(hexagons[y2][x2].getCenterY());
@@ -205,6 +205,10 @@ public class BasicBoardBuilder extends BoardBuilder {
         }
     }
 
+
+    public Hexagon[][] getHexagons() {
+        return hexagons;
+    }
 
     private int convertX(double x){
         return (int) Math.floor((x-xinit+10)/(2*xgap));

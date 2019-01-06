@@ -9,6 +9,7 @@ public class RoomThread implements Runnable {
 
     RoomThread(Room room)  {
         this.room = room;
+        isRunning = false;
     }
 
     @Override
