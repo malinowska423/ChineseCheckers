@@ -107,9 +107,9 @@ public class BasicBoardBuilder extends BoardBuilder {
                                     System.out.println("Y: " + convY + " X: " + convX);
                                     String answer = ClientThread.sendMessage("possible-moves;" + convY + ";" + convX);
                                     if(!answer.isEmpty()) {
-                                        String[] pairs = answer.split(";");
-                                        for (int j = 0; j < pairs.length; j++) {
-                                            String[] pair = pairs[j].split(" ");
+                                        String[] pairs = answer.split("<")[1].split(";");
+                                        for (String pair1 : pairs) {
+                                            String[] pair = pair1.split(" ");
                                             int hexy = Integer.parseInt(pair[0]);
                                             int hexx = Integer.parseInt(pair[1]);
                                             Hexagon hex = hexagons[hexy][hexx];
@@ -163,7 +163,7 @@ public class BasicBoardBuilder extends BoardBuilder {
 //                                });
 
                         } catch (ChineseCheckersException e) {
-                            e.printStackTrace();
+                            System.out.println("error during move");
                         }
 
 
@@ -178,11 +178,11 @@ public class BasicBoardBuilder extends BoardBuilder {
         }
     }
 
-    public int convertX(double x){
+    private int convertX(double x){
         return (int) Math.floor((x-xinit+10)/(2*xgap));
     }
 
-    public int convertY(double y){
+    private int convertY(double y){
         return (int) Math.floor((y+10) / ygap);
     }
      private void resetHexagons(){
