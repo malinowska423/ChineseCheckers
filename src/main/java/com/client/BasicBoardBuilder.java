@@ -1,11 +1,9 @@
 package com.client;
 
 import javafx.animation.FadeTransition;
-import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -15,6 +13,13 @@ public class BasicBoardBuilder extends BoardBuilder {
     private String moveStyle;
     private ArrayList<BoardCircle> pawnsList = new ArrayList<>();
     private Hexagon[][] hexagons;
+
+    private String defHexStyle;
+    private String markedHexStyle;
+
+    private double xinit;
+    private double xgap;
+    private double ygap;
 
 
     @Override
@@ -27,15 +32,17 @@ public class BasicBoardBuilder extends BoardBuilder {
 //        System.out.println(0.09*radius);
 
 //        double xgap = pane.getPrefWidth()/27;
-        double xgap = radius;
-        double ygap = radius*Math.sqrt(3);
+        xgap = radius;
+        ygap = radius*Math.sqrt(3);
 
-        double xinit = (pane.getPrefWidth()/2) - (14*xgap);
+        xinit = (pane.getPrefWidth()/2) - (14*xgap);
 
         double xpos = xinit;
         double ypos=(2*radius/Math.sqrt(3))+ inset;
 
         hexagons = new Hexagon[19][15];
+        defHexStyle = "-fx-fill: rgba(255,255,255,0.3);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius);
+        markedHexStyle = "-fx-fill: rgba(58,255,71,0.51);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius);
 
         for(int i=0;i<s.length();i++){
             char sign = s.charAt(i);
@@ -50,14 +57,14 @@ public class BasicBoardBuilder extends BoardBuilder {
             else {
 
                 Hexagon hexagon = new Hexagon(xpos, ypos, radius);
-                hexagons[convertY(ypos,ygap)][convertX(xpos, xinit, xgap)] = hexagon;
-                hexagon.setStyle("-fx-fill: rgba(255,255,255,0.3);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius));
+                hexagons[convertY(ypos)][convertX(xpos)] = hexagon;
+                hexagon.setStyle(defHexStyle);
                 pane.getChildren().add(hexagon);
 
 
                 if(sign != 'o') {
 
-                    hexagon.setOccupied(true);
+                    hexagon.setDisable(true);
 
                     BoardCircle circle = new BoardCircle();
 
@@ -84,42 +91,68 @@ public class BasicBoardBuilder extends BoardBuilder {
                     if (circle.isPlayable()) {
 
                         circle.setOnMouseClicked(mouseEvent -> {
-                            double y = circle.getCenterY();
-                            double x = circle.getCenterX();
-                            System.out.println("Y: " + convertY(y, ygap) + " X: " + convertX(x, xinit, xgap));
-                            if (moveCircle != null) {
-                                moveCircle.setStyle(moveStyle);
+                            if(!circle.equals(moveCircle)) {
+                                if (moveCircle != null) {
+                                    moveCircle.setStyle(moveStyle);
+                                    resetHexagons();
+                                }
+                                moveCircle = circle;
+                                moveStyle = circle.getStyle();
+                                moveCircle.setStyle("-fx-fill: coral");
+                                try {
+                                    double y = circle.getCenterY();
+                                    double x = circle.getCenterX();
+                                    int convY = convertY(y);
+                                    int convX = convertX(x);
+                                    System.out.println("Y: " + convY + " X: " + convX);
+                                    String answer = ClientThread.sendMessage("possible-moves;" + convY + ";" + convX);
+                                    if(!answer.isEmpty()) {
+                                        String[] pairs = answer.split(";");
+                                        for (int j = 0; j < pairs.length; j++) {
+                                            String[] pair = pairs[j].split(" ");
+                                            int hexy = Integer.parseInt(pair[0]);
+                                            int hexx = Integer.parseInt(pair[1]);
+                                            Hexagon hex = hexagons[hexy][hexx];
+                                            hex.setStyle(markedHexStyle);
+                                            hex.setDisable(false);
+                                        }
+                                    }
+                                } catch (ChineseCheckersException e){
+                                    System.out.println("error during getting moves");
+                                }
                             }
-                            moveCircle = circle;
-                            moveStyle = circle.getStyle();
-                            moveCircle.setStyle("-fx-fill: coral");
                         });
                     }
                 }
-
 
                 hexagon.setOnMouseClicked(mouseEvent -> {
                     double y = hexagon.getCenterY();
                     double x = hexagon.getCenterX();
 
-                    System.out.println("Y: " + convertY(y,ygap) + " X: " + convertX(x,xinit,xgap));
-                    if (moveCircle != null && !hexagon.isOccupied()) {
+                    System.out.println("Y: " + convertY(y) + " X: " + convertX(x));
+                    if (moveCircle != null) {
                         double moveY = moveCircle.getCenterY();
                         double moveX = moveCircle.getCenterX();
-//                        if( Math.abs(x - moveX) <= (2*xgap+10) && Math.abs(y - moveY) <= (ygap+10)) {
+                        try {
+                            ClientThread.sendMessage("move;" + convertY(moveY) + ";" + convertX(moveX) + ";" + convertY(y) + ";" + convertX(x));
+                            moveCircle.setStyle(moveStyle);
+                            moveCircle.setCenterY(y);
+                            moveCircle.setCenterX(x);
+                            moveCircle.toFront();
+                            moveCircle = null;
+
+                            resetHexagons();
 
 //                                FadeTransition ft = new FadeTransition(Duration.millis(150), moveCircle);
 //                                ft.setFromValue(1.0);
 //                                ft.setToValue(0.1);
-////                                ft.setCycleCount(Timeline.INDEFINITE);
-////                                ft.setAutoReverse(false);
 //                                ft.play();
 //                                ft.setOnFinished(actionEvent -> {
-//
 //                                    moveCircle.setStyle(moveStyle);
 //                                    moveCircle.setCenterY(y);
 //                                    moveCircle.setCenterX(x);
 //                                    moveCircle.toFront();
+//                                    resetHexagons();
 //
 //                                    FadeTransition ft2 = new FadeTransition(Duration.millis(150), moveCircle);
 //                                    ft2.setFromValue(0.1);
@@ -129,20 +162,12 @@ public class BasicBoardBuilder extends BoardBuilder {
 //                                    moveCircle = null;
 //                                });
 
-                            hexagon.setOccupied(true);
-                            hexagons[convertY(moveY,ygap)][convertX(moveX, xinit, xgap)].setOccupied(false);
-                            moveCircle.setStyle(moveStyle);
-                            moveCircle.setCenterY(y);
-                            moveCircle.setCenterX(x);
-                            moveCircle.toFront();
-                            moveCircle = null;
+                        } catch (ChineseCheckersException e) {
+                            e.printStackTrace();
+                        }
 
 
-//                                disablePawns();
-//                        }
-//                        else {
-//                            System.out.println("2far");
-//                        }
+
                     }
                 });
 
@@ -153,13 +178,23 @@ public class BasicBoardBuilder extends BoardBuilder {
         }
     }
 
-    public int convertX(double x, double xinit, double xgap){
+    public int convertX(double x){
         return (int) Math.floor((x-xinit+10)/(2*xgap));
     }
 
-    public int convertY(double y, double ygap){
+    public int convertY(double y){
         return (int) Math.floor((y+10) / ygap);
     }
+     private void resetHexagons(){
+        for (Hexagon[] hexline : hexagons) {
+            for (Hexagon hex : hexline) {
+                if(hex != null) {
+                    hex.setStyle(defHexStyle);
+                    hex.setDisable(true);
+                }
+            }
+        }
+     }
 
     public void activatePawns() {
         for (BoardCircle circle : pawnsList) {
