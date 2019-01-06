@@ -98,6 +98,7 @@ public class RoomThread implements Runnable {
             case "game-over": {
                 room.setGameOn(false);
                 isRunning = false;
+                ClientThread.receiveMessage();
                 Platform.runLater(() -> room.loadInfo("Game over, thanks!"));
                 break;
             }
