@@ -23,9 +23,7 @@ public class Client {
         }
     }
 
-    public static void enterRoom(Room room) {
-        openedRooms.add(room);
-    }
+
 
     public static void leaveRoom(Room room) {
         openedRooms.remove(room);
