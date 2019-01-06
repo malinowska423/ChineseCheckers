@@ -92,7 +92,7 @@ public class Room {
         }
 
         for(int i = 0; i < players.length ; i++) {
-            System.out.println(playersList.getChildren().get(i).toString());//.setStyle("-fx-text-fill: " + colors[i] + ";");
+            playersList.getChildren().get(i).setStyle("-fx-text-fill: " + colors[i] + ";");
         }
         playersList.getChildren().get(0).getStyleClass().add("first");
     }
