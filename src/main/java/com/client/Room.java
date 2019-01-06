@@ -20,7 +20,8 @@ public class Room {
     @FXML
     Button playButton;
 
-    RoomThread roomThread;
+    private RoomThread roomThread;
+    private String moves;
 
     public int getRoomId() {
         return roomId;
@@ -65,7 +66,7 @@ public class Room {
         } catch (ChineseCheckersWindowException e) {
             e.showWindow();
         }
-        boardBuilder.buildBoard(playerId, board, pane, colors);
+        boardBuilder.buildBoard(playerId, board, pane, colors,this);
     }
 
     public void updateBoard(String coordinates) {
@@ -140,16 +141,29 @@ public class Room {
     }
 
     public void takeTurn() {
+        try {
+            roomThread.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         playButton.setText("Send your move");
         playButton.setDisable(false);
         playButton.setOnMouseClicked(mouseEvent -> {
-            String moves = "";
-            try {
-                ClientThread.sendMessage("room-request;" + roomId + ";game-on<move;" + moves);
-                playButton.setDisable(true);
-            } catch (ChineseCheckersException e) {
-                new ChineseCheckersWindowException(e.getMessage()).showWindow();
+            if(!moves.isEmpty()) {
+                try {
+                    ClientThread.sendMessage("room-request;" + roomId + ";game-on;<move;" + moves);
+                    playButton.setDisable(true);
+                    roomThread.notify();
+                } catch (ChineseCheckersException e) {
+                    new ChineseCheckersWindowException(e.getMessage()).showWindow();
+                }
+            } else {
+                new ChineseCheckersWindowException("Make move first!").showWindow();
             }
         });
+    }
+
+    public void setMoves(String moves) {
+        this.moves = moves;
     }
 }

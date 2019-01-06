@@ -1,18 +1,16 @@
 package com.client;
 
-import javafx.animation.FadeTransition;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class BasicBoardBuilder extends BoardBuilder {
-    private BoardCircle moveCircle = null;
-    private String moveStyle;
-    private ArrayList<BoardCircle> pawnsList = new ArrayList<>();
-    private Hexagon[][] hexagons;
+    private BoardCircle moveCircle;
+    private String moveCircleStyle;
+    private final ArrayList<BoardCircle> pawnsList = new ArrayList<>();
+    private final Hexagon[][] hexagons = new Hexagon[19][15];;
 
     private String defHexStyle;
     private String markedHexStyle;
@@ -21,9 +19,14 @@ public class BasicBoardBuilder extends BoardBuilder {
     private double xgap;
     private double ygap;
 
+    public BasicBoardBuilder(){
+        moveCircle = null;
+        moveCircleStyle = null;
+    }
+
 
     @Override
-    public void buildBoard(int playerId, String s, Pane pane, String [] pawnsColors) {
+    public void buildBoard(int playerId, String s, Pane pane, String[] pawnsColors,Room room) {
 
 //        System.out.println(s);
         double inset = 10;
@@ -40,7 +43,7 @@ public class BasicBoardBuilder extends BoardBuilder {
         double xpos = xinit;
         double ypos=(2*radius/Math.sqrt(3))+ inset;
 
-        hexagons = new Hexagon[19][15];
+
         defHexStyle = "-fx-fill: rgba(255,255,255,0.3);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius);
         markedHexStyle = "-fx-fill: rgba(58,255,71,0.51);-fx-stroke: black;-fx-stroke-width: " + Math.ceil(0.09*radius);
 
@@ -93,11 +96,11 @@ public class BasicBoardBuilder extends BoardBuilder {
                         circle.setOnMouseClicked(mouseEvent -> {
                             if(!circle.equals(moveCircle)) {
                                 if (moveCircle != null) {
-                                    moveCircle.setStyle(moveStyle);
+                                    moveCircle.setStyle(moveCircleStyle);
                                     resetHexagons();
                                 }
                                 moveCircle = circle;
-                                moveStyle = circle.getStyle();
+                                moveCircleStyle = circle.getStyle();
                                 moveCircle.setStyle("-fx-fill: coral");
                                 try {
                                     double y = circle.getCenterY();
@@ -105,7 +108,7 @@ public class BasicBoardBuilder extends BoardBuilder {
                                     int convY = convertY(y);
                                     int convX = convertX(x);
                                     System.out.println("Y: " + convY + " X: " + convX);
-                                    String answer = ClientThread.sendMessage("possible-moves;" + convY + ";" + convX);
+                                    String answer = ClientThread.sendMessage("room-request;" + room.getRoomId() + ";game-on;<possible-moves;" + convY + ";" + convX);
                                     if(!answer.isEmpty()) {
                                         String[] pairs = answer.split("<")[1].split(";");
                                         for (String pair1 : pairs) {
@@ -131,40 +134,48 @@ public class BasicBoardBuilder extends BoardBuilder {
 
                     System.out.println("Y: " + convertY(y) + " X: " + convertX(x));
                     if (moveCircle != null) {
+
+                        try {
                         double moveY = moveCircle.getCenterY();
                         double moveX = moveCircle.getCenterX();
-                        try {
-                            ClientThread.sendMessage("move;" + convertY(moveY) + ";" + convertX(moveX) + ";" + convertY(y) + ";" + convertX(x));
-                            moveCircle.setStyle(moveStyle);
-                            moveCircle.setCenterY(y);
-                            moveCircle.setCenterX(x);
-                            moveCircle.toFront();
-                            moveCircle = null;
 
-                            resetHexagons();
+                        String moves = convertY(moveY) + ";" + convertX(moveX) + ";" + convertY(y) + ";" + convertX(x);
+                        room.setMoves(moves);
 
-//                                FadeTransition ft = new FadeTransition(Duration.millis(150), moveCircle);
-//                                ft.setFromValue(1.0);
-//                                ft.setToValue(0.1);
-//                                ft.play();
-//                                ft.setOnFinished(actionEvent -> {
-//                                    moveCircle.setStyle(moveStyle);
-//                                    moveCircle.setCenterY(y);
-//                                    moveCircle.setCenterX(x);
-//                                    moveCircle.toFront();
-//                                    resetHexagons();
-//
-//                                    FadeTransition ft2 = new FadeTransition(Duration.millis(150), moveCircle);
-//                                    ft2.setFromValue(0.1);
-//                                    ft2.setToValue(1.0);
-//                                    ft2.play();
-//
-//                                    moveCircle = null;
-//                                });
+                        ClientThread.sendMessage("room-request;" + room.getRoomId() + ";game-on;<move;" + moves);
 
+                        moveCircle.setStyle(moveCircleStyle);
+                        moveCircle.setCenterY(y);
+                        moveCircle.setCenterX(x);
+                        moveCircle.toFront();
+                        moveCircle = null;
+
+                        resetHexagons();
                         } catch (ChineseCheckersException e) {
-                            System.out.println("error during move");
+                            e.printStackTrace();
                         }
+
+//                        disablePawns();
+
+//                            FadeTransition ft = new FadeTransition(Duration.millis(150), moveCircle);
+//                            ft.setFromValue(1.0);
+//                            ft.setToValue(0.1);
+//                            ft.play();
+//                            ft.setOnFinished(actionEvent -> {
+//                                moveCircle.setStyle(moveCircleStyle);
+//                                moveCircle.setCenterY(y);
+//                                moveCircle.setCenterX(x);
+//                                moveCircle.toFront();
+//                                resetHexagons();
+//
+//                                FadeTransition ft2 = new FadeTransition(Duration.millis(150), moveCircle);
+//                                ft2.setFromValue(0.1);
+//                                ft2.setToValue(1.0);
+//                                ft2.play();
+//
+//                                moveCircle = null;
+//                            });
+
 
 
 
