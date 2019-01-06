@@ -26,6 +26,9 @@ public class RoomThread implements Runnable {
                     } catch (ChineseCheckersException e) {
                         Platform.runLater(() -> new ChineseCheckersWindowException(e.getMessage()).showWindow());
                     }
+                } else {
+                    room.takeTurn();
+                    myTurn = false;
                 }
             }
         }
@@ -38,6 +41,9 @@ public class RoomThread implements Runnable {
     public synchronized void handleRequest(String request) throws ChineseCheckersException{
         String requestCode = request.split(";")[0];
         switch (requestCode) {
+            case "leave-room": {
+                break;
+            }
             case "update-game": {
                 //pattern: "update-game;[true/false];[move-update];[message-update]"
                 myTurn = Boolean.parseBoolean(request.split(";")[1]);

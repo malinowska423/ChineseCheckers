@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Objects;
 
 public class ClientThread implements Runnable{
@@ -38,7 +39,11 @@ public class ClientThread implements Runnable{
                 } else {
                     return answer;
                 }
-            } catch (IOException e) {
+            } catch (SocketException e) {
+                new ChineseCheckersWindowException(e.getMessage()).showWindow();
+                System.exit(1);
+                return "";
+            } catch (IOException e){
                 e.printStackTrace();
                 throw new ChineseCheckersException(e.getMessage());
             }

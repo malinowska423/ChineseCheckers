@@ -92,7 +92,7 @@ public class Room {
         }
 
         for(int i = 0; i < players.length ; i++) {
-            playersList.getChildren().get(i).setStyle("-fx-text-fill: " + colors[i] + ";");
+            System.out.println(playersList.getChildren().get(i).toString());//.setStyle("-fx-text-fill: " + colors[i] + ";");
         }
         playersList.getChildren().get(0).getStyleClass().add("first");
     }
@@ -137,5 +137,19 @@ public class Room {
 
     public boolean isGameOn() {
         return gameOn;
+    }
+
+    public void takeTurn() {
+        playButton.setText("Send your move");
+        playButton.setDisable(false);
+        playButton.setOnMouseClicked(mouseEvent -> {
+            String moves = "";
+            try {
+                ClientThread.sendMessage("room-request;" + roomId + ";game-on<move;" + moves);
+                playButton.setDisable(true);
+            } catch (ChineseCheckersException e) {
+                new ChineseCheckersWindowException(e.getMessage()).showWindow();
+            }
+        });
     }
 }
